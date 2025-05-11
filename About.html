@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Lantukh - About</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #FFFFFF;
+      color: #1A2533;
+      margin: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease-in forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .slide-in {
+      transform: translateY(50px);
+      opacity: 0;
+      animation: slideIn 0.8s ease-out forwards;
+    }
+    @keyframes slideIn {
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .hero {
+      background: linear-gradient(rgba(13, 26, 59, 0.9), rgba(13, 26, 59, 0.9)), url('https://source.unsplash.com/random/1920x1080?technology');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      min-height: 60vh;
+    }
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .holo-btn {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00B4D8;
+    }
+    .holo-btn:hover {
+      box-shadow: 0 0 20px #00B4D8, 0 0 30px #00B4D8;
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      width: 0;
+      z-index: 30;
+      transition: width 0.2s ease;
+    }
+    .linkedin-badge {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .linkedin-badge:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00B4D8;
+    }
+    footer {
+      position: relative;
+      background: #0D1A3B;
+      color: #FFFFFF;
+      padding: 40px 20px;
+      border-top: 2px solid #00B4D8;
+      z-index: 10;
+    }
+    .rotate-3d {
+      transition: transform 0.5s ease;
+    }
+    .rotate-3d:hover {
+      transform: rotateY(20deg) rotateX(10deg);
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 40px;
+      border-left: 2px solid #00B4D8;
+      margin-bottom: 20px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      background: #00B4D8;
+      border-radius: 50%;
+    }
+    .timeline-item:hover .timeline-popup {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .timeline-popup {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 200px;
+      background: #1A2533;
+      color: #FFFFFF;
+      padding: 10px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 10;
+    }
+    .progress-bar-fill {
+      height: 8px;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+    .parallax {
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+    }
+    .mouse-trail {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B4D8;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
+    }
+    .icon-hover {
+      transition: transform 0.3s ease;
+    }
+    .icon-hover:hover {
+      transform: scale(1.2);
+    }
+    @media (max-width: 640px) {
+      footer {
+        padding: 20px 10px;
+      }
+      footer .flex {
+        flex-direction: column;
+        gap: 10px;
+      }
+      footer p, footer a {
+        font-size: 14px;
+      }
+      .hero {
+        min-height: 50vh;
+      }
+      .timeline-popup {
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 10px);
+      }
+      .timeline-item:hover .timeline-popup {
+        transform: translate(-50%, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="bg-midnight-900 text-white fixed w-full top-0 shadow-lg z-20">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold">Daniel Lantukh</a>
+      <div class="space-x-6">
+        <a href="about.html" class="nav-link hover:text-electric-400 transition">About</a>
+        <a href="experience.html" class="nav-link hover:text-electric-400 transition">Experience</a>
+        <a href="skills.html" class="nav-link hover:text-electric-400 transition">Skills</a>
+        <a href="Documentation.html" class="nav-link hover:text-electric-400 transition">Documentation</a>
+        <a href="contact.html" class="nav-link hover:text-electric-400 transition">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero text-white flex items-center justify-center pt-16 relative">
+    <canvas class="particles"></canvas>
+    <div class="container mx-auto px-4 text-center z-10">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 fade-in rotate-3d">About Me</h1>
+      <p class="text-lg max-w-2xl mx-auto mb-8 fade-in" style="animation-delay: 0.3s;">
+        I’m a dedicated Quality Assurance Engineer with over 4 years of experience in manual and automated testing, specializing in Cypress and API testing. Fluent in English and Ukrainian, I excel in Agile environments to deliver high-quality software.
+      </p>
+    </div>
+  </section>
+
+  <!-- Profile Section -->
+  <section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center text-midnight-900 mb-12 fade-in">My Journey</h2>
+      <div class="max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="text-gray-600 slide-in">
+            <div class="timeline-item">
+              <p class="font-semibold">4+ Years in QA</p>
+              <p>Specialized in manual and automated testing, with a focus on improving software reliability.</p>
+              <div class="timeline-popup">
+                <p>Experienced with Cypress, JavaScript, and API testing, ensuring full test coverage.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <p class="font-semibold">Agile Teamwork</p>
+              <p>Thrived in Agile environments, collaborating with developers and product teams.</p>
+              <div class="timeline-popup">
+                <p>Participated in one-week sprints, contributing to timely project completions.</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <p class="font-semibold">Multilingual Collaboration</p>
+              <p>Fluent in English and Ukrainian, enabling seamless international teamwork.</p>
+              <div class="timeline-popup">
+                <p>Bridged communication gaps in diverse teams, enhancing project efficiency.</p>
+              </div>
+            </div>
+          </div>
+          <div class="slide-in" style="animation-delay: 0.2s;">
+            <canvas id="skillsRadar" class="mx-auto" width="300" height="300"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Section -->
+  <section class="py-20 bg-gray-100 parallax" style="background-image: url('https://source.unsplash.com/random/1920x1080?education');">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center text-midnight-900 mb-12 fade-in">Education</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-lg shadow-sm slide-in flex items-start">
+          <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L1 9l11 7 11-7-11-7zm0 18l-8-5V11l8 5 8-5v4l-8 5z"/>
+          </svg>
+          <div>
+            <h3 class="text-xl font-semibold text-midnight-900 mb-2">Associate’s Degree in Culinary Arts</h3>
+            <p class="text-gray-600">Chernihiv Vocational and Technical Education Center No. 16 | 09/2015 - 01/2017</p>
+            <p class="text-gray-600 mt-2">Specialized in professional cooking techniques, food presentation, and kitchen management.</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-sm slide-in flex items-start" style="animation-delay: 0.2s;">
+          <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L1 9l11 7 11-7-11-7zm0 18l-8-5V11l8 5 8-5v4l-8 5z"/>
+          </svg>
+          <div>
+            <h3 class="text-xl font-semibold text-midnight-900 mb-2">QA Automation Engineer Course</h3>
+            <p class="text-gray-600">Codemify | 06/2022 - 11/2022</p>
+            <p class="text-gray-600 mt-2">Gained expertise in automation testing with Cypress and JavaScript.</p>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-sm slide-in md:col-span-2 flex items-start" style="animation-delay: 0.4s;">
+          <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L1 9l11 7 11-7-11-7zm0 18l-8-5V11l8 5 8-5v4l-8 5z"/>
+          </svg>
+          <div>
+            <h3 class="text-xl font-semibold text-midnight-900 mb-2">High School Diploma</h3>
+            <p class="text-gray-600">Kozyllvska General Education School | 09/2004 - 05/2015</p>
+            <p class="text-gray-600 mt-2">Completed foundational education, building a strong base for professional growth.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Languages Section -->
+  <section class="py-20 bg-white parallax" style="background-image: url('https://source.unsplash.com/random/1920x1080?language');">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center text-midnight-900 mb-12 fade-in">Languages</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+        <div class="text-center slide-in">
+          <div class="flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 mr-2 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 10h-4v2h4v2H6v-2h4v-2H6v-2h4v-2H6V8h4V6h4v2h-4v2h4v2z"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-midnight-900">English</h3>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="progress-bar-fill" style="width: 0;" data-width="90"></div>
+          </div>
+          <p class="text-gray-600 mt-2">Professional</p>
+        </div>
+        <div class="text-center slide-in" style="animation-delay: 0.2s;">
+          <div class="flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 mr-2 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 10h-4v2h4v2H6v-2h4v-2H6v-2h4v-2H6V8h4V6h4v2h-4v2h4v2z"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-midnight-900">Ukrainian</h3>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="progress-bar-fill" style="width: 0;" data-width="100"></div>
+          </div>
+          <p class="text-gray-600 mt-2">Native</p>
+        </div>
+        <div class="text-center slide-in" style="animation-delay: 0.4s;">
+          <div class="flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 mr-2 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 10h-4v2h4v2H6v-2h4v-2H6v-2h4v-2H6V8h4V6h4v2h-4v2h4v2z"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-midnight-900">Russian</h3>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="progress-bar-fill" style="width: 0;" data-width="95"></div>
+          </div>
+          <p class="text-gray-600 mt-2">Full</p>
+        </div>
+        <div class="text-center slide-in" style="animation-delay: 0.6s;">
+          <div class="flex items-center justify-center mb-2">
+            <svg class="w-6 h-6 mr-2 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 10h-4v2h4v2H6v-2h4v-2H6v-2h4v-2H6V8h4V6h4v2h-4v2h4v2z"/>
+            </svg>
+            <h3 class="text-lg font-semibold text-midnight-900">Polish</h3>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="progress-bar-fill" style="width: 0;" data-width="30"></div>
+          </div>
+          <p class="text-gray-600 mt-2">Elementary</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating LinkedIn Badge -->
+  <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="linkedin-badge fixed bottom-4 left-4 bg-electric-400 text-midnight-900 p-4 rounded-full shadow-lg holo-btn z-50">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+    </svg>
+  </a>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container mx-auto px-4 text-center">
+      <p class="mb-4">© 2025 Daniel Lantukh. All rights reserved.</p>
+      <div class="flex justify-center space-x-6">
+        <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="text-electric-400 hover:text-gold-400 transition">LinkedIn</a>
+        <a href="mailto:daniel.14146566@icloud.com" class="text-electric-400 hover:text-gold-400 transition">daniel.14146566@icloud.com</a>
+        <a href="tel:+14705199240" class="text-electric-400 hover:text-gold-400 transition">470-519-9240</a>
+      </div>
+      <p class="mt-4 text-sm opacity-75">Please reach out via email or phone if LinkedIn is unavailable.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Particle Network Background
+    const canvas = document.querySelector('.particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = [];
+    const maxDistance = 100;
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5
+      });
+    }
+    let mouse = { x: null, y: null };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#00B4D8';
+        ctx.fill();
+        // Connect to mouse
+        if (mouse.x && mouse.y) {
+          const dist = Math.sqrt((p.x - mouse.x) ** 2 + (p.y - mouse.y) ** 2);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(0, 180, 216, ${1 - dist / maxDistance})`;
+            ctx.stroke();
+          }
+        }
+        // Connect particles
+        particles.forEach(p2 => {
+          const dist = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(0, 180, 216, ${1 - dist / maxDistance})`;
+            ctx.stroke();
+          }
+        });
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.querySelector('.progress-bar').style.width = progress + '%';
+    });
+
+    // Radar Chart
+    const radarCtx = document.getElementById('skillsRadar').getContext('2d');
+    new Chart(radarCtx, {
+      type: 'radar',
+      data: {
+        labels: ['Automation', 'API Testing', 'Agile', 'Defect Tracking', 'Cross-Platform'],
+        datasets: [{
+          label: 'Skills',
+          data: [90, 85, 80, 75, 70],
+          backgroundColor: 'rgba(0, 180, 216, 0.2)',
+          borderColor: '#00B4D8',
+          pointBackgroundColor: '#FFD700',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 100,
+            ticks: { stepSize: 25 }
+          }
+        },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Language Progress Bars Animation
+    const progressBars = document.querySelectorAll('.progress-bar-fill');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bar = entry.target;
+          const width = bar.getAttribute('data-width');
+          bar.style.width = `${width}%`;
+        }
+      });
+    }, { threshold: 0.5 });
+    progressBars.forEach(bar => observer.observe(bar));
+
+    // Mouse Trail Effect
+    document.addEventListener('mousemove', (e) => {
+      const trail = document.createElement('div');
+      trail.className = 'mouse-trail';
+      trail.style.left = e.clientX + 'px';
+      trail.style.top = e.clientY + 'px';
+      document.body.appendChild(trail);
+      setTimeout(() => {
+        trail.style.opacity = '0';
+        setTimeout(() => trail.remove(), 500);
+      }, 300);
+    });
+
+    // GSAP Animations
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.from('.fade-in', { opacity: 0, duration: 1, stagger: 0.2 });
+      gsap.from('.slide-in', { y: 50, opacity: 0, duration: 0.8, stagger: 0.2 });
+
+      // Debug LinkedIn badge click
+      document.querySelector('.linkedin-badge').addEventListener('click', () => {
+        console.log('LinkedIn badge clicked');
+      });
+    });
+  </script>
+</body>
+</html>

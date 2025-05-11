@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Lantukh - Documentation</title>
+  <!-- Use a pre-built Tailwind CSS file instead of the CDN -->
+  <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #FFFFFF;
+      color: #1A2533;
+      margin: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease-in forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .slide-in {
+      transform: translateY(50px);
+      opacity: 0;
+      animation: slideIn 0.8s ease-out forwards;
+    }
+    @keyframes slideIn {
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .hero {
+      background: linear-gradient(rgba(13, 26, 59, 0.9), rgba(13, 26, 59, 0.9)), url('https://source.unsplash.com/random/1920x1080?technology');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      min-height: 60vh;
+    }
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .holo-btn {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00B4D8;
+    }
+    .holo-btn:hover {
+      box-shadow: 0 0 20px #00B4D8, 0 0 30px #00B4D8;
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      width: 0;
+      z-index: 30;
+      transition: width 0.2s ease;
+    }
+    .linkedin-badge {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .linkedin-badge:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00B4D8;
+}
+.holo-btn {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00B4D8;
+}
+.holo-btn:hover {
+    box-shadow: 0 0 20px #00B4D8, 0 0 30px #00B4D8;
+}
+    footer {
+      position: relative;
+      background: #0D1A3B;
+      color: #FFFFFF;
+      padding: 40px 20px;
+      border-top: 2px solid #00B4D8;
+      z-index: 10;
+    }
+    .rotate-3d {
+      transition: transform 0.5s ease;
+    }
+    .rotate-3d:hover {
+      transform: rotateY(20deg) rotateX(10deg);
+    }
+    .holo-item {
+      position: relative;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      margin-bottom: 40px;
+      perspective: 1000px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(0, 180, 216, 0.3);
+      box-shadow: 0 0 20px rgba(0, 180, 216, 0.2);
+      animation: holoFlicker 3s infinite;
+      cursor: pointer; /* Indicate the item is clickable */
+    }
+    @keyframes holoFlicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+    .holo-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(0, 180, 216, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 200% 200%;
+      animation: holoShine 4s infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    @keyframes holoShine {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 200%; }
+    }
+    .holo-item:hover {
+      box-shadow: 0 0 30px rgba(0, 180, 216, 0.5);
+      animation: glow 1.5s infinite;
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 10px #00B4D8; }
+      50% { box-shadow: 0 0 30px #FFD700; }
+    }
+    .holo-content {
+      transform: rotateY(0deg);
+      transition: transform 0.3s ease;
+    }
+    .holo-item:hover .holo-content {
+      transform: rotateY(10deg) rotateX(5deg);
+    }
+    .holo-item:hover .holo-popup {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .holo-popup {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 200px;
+      background: #1A2533;
+      color: #FFFFFF;
+      padding: 10px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 10;
+    }
+    .holo-projection {
+      position: absolute;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 50px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+    .holo-item:hover .holo-projection {
+      opacity: 1;
+    }
+    .holo-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .holo-item:hover .holo-particles {
+      opacity: 1;
+    }
+    .spotlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(0, 180, 216, 0.3) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .holo-item:hover .spotlight {
+      opacity: 1;
+    }
+    .experience-section {
+      position: relative;
+      background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://source.unsplash.com/random/1920x1080?work');
+      background-size: cover;
+      background-position: center;
+      transition: background 0.5s ease;
+    }
+    .experience-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #0D1A3B, #00B4D8);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .experience-section.shapes::before {
+      opacity: 0.8;
+    }
+    .shapes-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .metric-sphere {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, #00B4D8, #FFD700);
+      border-radius: 50%;
+      animation: rotateSphere 10s linear infinite;
+      cursor: pointer;
+    }
+    @keyframes rotateSphere {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .metric-sphere:hover .metric-text {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .metric-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .globe-container {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 100px;
+      height: 100px;
+      animation: glowGlobe 2s infinite;
+    }
+    @keyframes glowGlobe {
+      0%, 100% { filter: drop-shadow(0 0 5px #00B4D8); }
+      50% { filter: drop-shadow(0 0 15px #FFD700); }
+    }
+    .globe {
+      animation: rotateGlobe 20s linear infinite;
+    }
+    @keyframes rotateGlobe {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .mouse-trail {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B4D8;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
+    }
+    .icon-hover {
+      transition: transform 0.3s ease;
+    }
+    .icon-hover:hover {
+      transform: scale(1.2);
+    }
+    #hologram-canvas {
+      width: 100%;
+      height: 300px;
+      margin-bottom: 40px;
+    }
+    .hologram-node {
+      cursor: pointer;
+    }
+    .hologram-node:hover {
+      animation: pulseNode 1s infinite;
+    }
+    @keyframes pulseNode {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    @media (max-width: 640px) {
+      footer {
+        padding: 20px 10px;
+      }
+      footer .flex {
+        flex-direction: column;
+        gap: 10px;
+      }
+      footer p, footer a {
+        font-size: 14px;
+      }
+      .hero {
+        min-height: 50vh;
+      }
+      .holo-popup {
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 10px);
+      }
+      .holo-item:hover .holo-popup {
+        transform: translate(-50%, 0);
+      }
+      .globe-container {
+        width: 80px;
+        height: 80px;
+      }
+      #hologram-canvas {
+        height: 200px;
+      }
+      .holo-projection {
+        top: -40px;
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="bg-midnight-900 text-white fixed w-full top-0 shadow-lg z-20">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold">Daniel Lantukh</a>
+      <div class="space-x-6">
+        <a href="about.html" class="nav-link hover:text-electric-400 transition">About</a>
+        <a href="experience.html" class="nav-link hover:text-electric-400 transition">Experience</a>
+        <a href="skills.html" class="nav-link hover:text-electric-400 transition">Skills</a>
+        <a href="Documentation.html" class="nav-link hover:text-electric-400 transition">Documentation</a>
+        <a href="contact.html" class="nav-link hover:text-electric-400 transition">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero text-white flex items-center justify-center pt-16 relative">
+    <canvas class="particles"></canvas>
+    <div class="container mx-auto px-4 text-center z-10">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 fade-in rotate-3d">QA Documentation</h1>
+      <p class="text-lg max-w-2xl mx-auto mb-8 fade-in" style="animation-delay: 0.3s;">
+        Dive into my expertise through detailed documentation on Test Cases, Bug Reports, and Test Automation with Cypress, crafted to elevate software quality.
+      </p>
+    </div>
+    <!-- Holographic Globe -->
+    <div class="globe-container">
+      <svg class="globe w-full h-full" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#00B4D8" stroke-width="2" opacity="0.5"/>
+        <path d="M50 10a40 40 0 0 1 0 80" fill="none" stroke="#FFD700" stroke-width="1"/>
+        <path d="M10 50h80" fill="none" stroke="#FFD700" stroke-width="1"/>
+        <circle cx="70" cy="30" r="3" fill="#FFD700"/>
+        <circle cx="40" cy="60" r="3" fill="#FFD700"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Knowledge Timeline Section with Holographic Effects -->
+  <section class="py-20 experience-section relative">
+    <canvas class="shapes-canvas"></canvas>
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- Main Hologram Canvas -->
+      <canvas id="hologram-canvas"></canvas>
+      <h2 class="text-3xl font-bold text-center text-midnight-900 mb-12 fade-in">Knowledge Timeline</h2>
+      <div class="max-w-3xl mx-auto">
+        <div class="holo-item slide-on" onclick="window.location.href='TestCases.html'">
+          <div class="holo-content">
+            <div class="flex items-start relative">
+              <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M4 4h16v2H4V4zm0 4h16v12H4V8zm2 2v8h12v-8H6zm2 2h8v2H8v-2zm0 4h8v2H8v-2z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-midnight-900">Test Cases</h3>
+                <p class="text-gray-600">Comprehensive guides for crafting test cases that ensure robust software functionality across web and mobile platforms.</p>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                  <li>Techniques for functional, regression, and usability testing.</li>
+                  <li>Best practices for test case documentation and execution.</li>
+                </ul>
+                <a href="TestCases.html" class="text-electric-400 hover:text-gold-400 transition mt-2 inline-block" onclick="event.stopPropagation();">Explore Test Cases</a>
+              </div>
+              <div class="ml-4 metric-sphere">
+                <div class="metric-text">100+ Test Cases</div>
+              </div>
+            </div>
+            <canvas class="holo-particles"></canvas>
+            <canvas class="holo-projection"></canvas>
+            <div class="spotlight"></div>
+          </div>
+          <div class="holo-popup">
+            <p>Structured test cases drive quality and reliability in software development.</p>
+          </div>
+        </div>
+        <div class="holo-item slide-on" style="animation-delay: 0.2s;" onclick="window.location.href='BugReports.html'">
+          <div class="holo-content">
+            <div class="flex items-start relative">
+              <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-midnight-900">Bug Reports</h3>
+                <p class="text-gray-600">Strategies for identifying, documenting, and resolving defects to enhance product stability.</p>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                  <li>Effective use of Jira and Zephyr for defect tracking.</li>
+                  <li>Tips for clear and actionable bug reports.</li>
+                </ul>
+                <a href="BugReports.html" class="text-electric-400 hover:text-gold-400 transition mt-2 inline-block" onclick="event.stopPropagation();">Explore Bug Reports</a>
+              </div>
+              <div class="ml-4 metric-sphere">
+                <div class="metric-text">50+ Bugs Tracked</div>
+              </div>
+            </div>
+            <canvas class="holo-particles"></canvas>
+            <canvas class="holo-projection"></canvas>
+            <div class="spotlight"></div>
+          </div>
+          <div class="holo-popup">
+            <p>Precise bug reporting accelerates issue resolution and improves user experience.</p>
+          </div>
+        </div>
+        <div class="holo-item slide-on" style="animation-delay: 0.4s;" onclick="window.location.href='TestAutomationCypress.html'">
+          <div class="holo-content">
+            <div class="flex items-start relative">
+              <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-midnight-900">Test Automation Cypress</h3>
+                <p class="text-gray-600">In-depth tutorials on automating tests with Cypress to streamline QA processes.</p>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                  <li>Writing robust test scripts with Cypress and JavaScript.</li>
+                  <li>Integrating automation into CI/CD pipelines.</li>
+                </ul>
+                <a href="TestAutomationCypress.html" class="text-electric-400 hover:text-gold-400 transition mt-2 inline-block" onclick="event.stopPropagation();">Explore Cypress Automation</a>
+              </div>
+              <div class="ml-4 metric-sphere">
+                <div class="metric-text">30% Efficiency Gain</div>
+              </div>
+            </div>
+            <canvas class="holo-particles"></canvas>
+            <canvas class="holo-projection"></canvas>
+            <div class="spotlight"></div>
+          </div>
+          <div class="holo-popup">
+            <p>Automation with Cypress boosts testing speed and reliability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating LinkedIn Badge -->
+  <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="linkedin-badge fixed bottom-4 left-4 bg-electric-400 text-midnight-900 p-4 rounded-full shadow-lg holo-btn z-50">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+    </svg>
+  </a>
+
+
+  <!-- Footer -->
+  <footer>
+    <div class="container mx-auto px-4 text-center">
+      <p class="mb-4">© 2025 Daniel Lantukh. All rights reserved.</p>
+      <div class="flex justify-center space-x-6">
+        <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="text-electric-400 hover:text-gold-400 transition">LinkedIn</a>
+        <a href="mailto:daniel.14146566@icloud.com" class="text-electric-400 hover:text-gold-400 transition">daniel.14146566@icloud.com</a>
+        <a href="tel:+14705199240" class="text-electric-400 hover:text-gold-400 transition">470-519-9240</a>
+      </div>
+      <p class="mt-4 text-sm opacity-75">Please reach out via email or phone if LinkedIn is unavailable.</p>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script>
+    // Particle Background
+    const canvas = document.querySelector('.particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = [];
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        speed: Math.random() * 0.3 + 0.1
+      });
+    }
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#00B4D8';
+        ctx.fill();
+        p.y -= p.speed;
+        if (p.y < 0) p.y = canvas.height;
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Shapes Background Animation (Section)
+    const shapesCanvas = document.querySelector('.shapes-canvas');
+    const shapesCtx = shapesCanvas.getContext('2d');
+    shapesCanvas.width = window.innerWidth;
+    shapesCanvas.height = document.querySelector('.experience-section').offsetHeight;
+    const shapes = [];
+    for (let i = 0; i < 20; i++) {
+      shapes.push({
+        x: Math.random() * shapesCanvas.width,
+        y: Math.random() * shapesCanvas.height,
+        size: Math.random() * 30 + 10,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        type: Math.random() > 0.5 ? 'triangle' : 'hexagon',
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+    function animateShapes() {
+      shapesCtx.clearRect(0, 0, shapesCanvas.width, shapesCanvas.height);
+      shapes.forEach(s => {
+        s.x += s.speedX;
+        s.y += s.speedY;
+        if (s.x < 0 || s.x > shapesCanvas.width) s.speedX *= -1;
+        if (s.y < 0 || s.y > shapesCanvas.height) s.speedY *= -1;
+        shapesCtx.beginPath();
+        if (s.type === 'triangle') {
+          shapesCtx.moveTo(s.x, s.y - s.size);
+          shapesCtx.lineTo(s.x - s.size, s.y + s.size);
+          shapesCtx.lineTo(s.x + s.size, s.y + s.size);
+          shapesCtx.closePath();
+        } else {
+          shapesCtx.moveTo(s.x + s.size * Math.cos(0), s.y + s.size * Math.sin(0));
+          for (let i = 1; i < 6; i++) {
+            shapesCtx.lineTo(s.x + s.size * Math.cos(i * 2 * Math.PI / 6), s.y + s.size * Math.sin(i * 2 * Math.PI / 6));
+          }
+          shapesCtx.closePath();
+        }
+        shapesCtx.fillStyle = `rgba(0, 180, 216, ${s.opacity})`;
+        shapesCtx.fill();
+      });
+      requestAnimationFrame(animateShapes);
+    }
+    animateShapes();
+
+    // Holographic Particles for Each Card
+    document.querySelectorAll('.holo-particles').forEach(particleCanvas => {
+      const pCtx = particleCanvas.getContext('2d');
+      particleCanvas.width = particleCanvas.parentElement.offsetWidth;
+      particleCanvas.height = particleCanvas.parentElement.offsetHeight;
+      const holoParticles = [];
+      for (let i = 0; i < 10; i++) {
+        holoParticles.push({
+          x: Math.random() * particleCanvas.width,
+          y: Math.random() * particleCanvas.height,
+          radius: Math.random() * 1 + 0.5,
+          speedX: (Math.random() - 0.5) * 0.3,
+          speedY: (Math.random() - 0.5) * 0.3
+        });
+      }
+      function animateHoloParticles() {
+        pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+        holoParticles.forEach(p => {
+          p.x += p.speedX;
+          p.y += p.speedY;
+          if (p.x < 0 || p.x > particleCanvas.width) p.speedX *= -1;
+          if (p.y < 0 || p.y > particleCanvas.height) p.speedY *= -1;
+          pCtx.beginPath();
+          pCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          pCtx.fillStyle = '#FFD700';
+          pCtx.fill();
+        });
+        requestAnimationFrame(animateHoloParticles);
+      }
+      animateHoloParticles();
+    });
+
+    // Holographic Projections for Each Card
+    const projectionCanvases = document.querySelectorAll('.holo-projection');
+    const projectionScenes = [];
+    projectionCanvases.forEach(projCanvas => {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ canvas: projCanvas, alpha: true });
+      renderer.setSize(50, 50);
+      camera.position.z = 10;
+
+      const geometry = new THREE.BoxGeometry(4, 4, 4);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00B4D8, wireframe: true });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      function animateProjection() {
+        requestAnimationFrame(animateProjection);
+        cube.rotation.x += 0.05;
+        cube.rotation.y += 0.05;
+        renderer.render(scene, camera);
+      }
+      animateProjection();
+      projectionScenes.push({ scene, cube, renderer });
+    });
+
+    // Main Hologram Visualization
+    const hologramCanvas = document.getElementById('hologram-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, hologramCanvas.clientWidth / 300, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: hologramCanvas, alpha: true });
+    renderer.setSize(hologramCanvas.clientWidth, 300);
+    camera.position.z = 50;
+
+    // Holographic Timeline Line with Glow
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00B4D8, linewidth: 2, transparent: true, opacity: 0.7 });
+    const linePoints = [];
+    for (let x = -50; x <= 50; x += 1) {
+      linePoints.push(new THREE.Vector3(x, 0, 0));
+    }
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(linePoints);
+    const holoLine = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(holoLine);
+
+    // Holographic Nodes and Labels
+    const knowledge = [
+      { x: -30, title: "Test Cases", achievements: "100+ Test Cases", skills: ["Functional", "Regression", "Usability"], model: "gear" },
+      { x: 0, title: "Bug Reports", achievements: "50+ Bugs Tracked", skills: ["Jira", "Zephyr", "Postman"], model: "gear" },
+      { x: 30, title: "Cypress Automation", achievements: "30% Efficiency Gain", skills: ["Cypress", "JavaScript", "API"], model: "chart" }
+    ];
+
+    const nodes = [];
+    knowledge.forEach(item => {
+      // Main Node
+      const nodeGeometry = new THREE.SphereGeometry(2, 32, 32);
+      const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700, transparent: true, opacity: 0.8 });
+      const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+      node.position.set(item.x, 0, 0);
+      node.userData = item;
+      node.className = "hologram-node";
+      scene.add(node);
+      nodes.push(node);
+
+      // Holographic Frame Around Node
+      const frameGeometry = new THREE.TorusGeometry(2.5, 0.2, 16, 32);
+      const frameMaterial = new THREE.MeshBasicMaterial({ color: 0x00B4D8, wireframe: true });
+      const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+      frame.position.set(item.x, 0, 0);
+      scene.add(frame);
+
+      // Skill Satellites
+      item.skills.forEach((skill, i) => {
+        const satelliteGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const satelliteMaterial = new THREE.MeshBasicMaterial({ color: 0x00B4D8, transparent: true, opacity: 0.6 });
+        const satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
+        satellite.userData = { angle: (i / item.skills.length) * 2 * Math.PI, radius: 5, skill };
+        scene.add(satellite);
+        satellite.parentNode = node;
+      });
+    });
+
+    // Connections Between Nodes
+    const connectionMaterial = new THREE.LineBasicMaterial({ color: 0x00B4D8, opacity: 0.3, transparent: true });
+    for (let i = 0; i < nodes.length - 1; i++) {
+      const points = [
+        new THREE.Vector3(nodes[i].position.x, 0, 0),
+        new THREE.Vector3(nodes[i + 1].position.x, 0, 0)
+      ];
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const line = new THREE.Line(geometry, connectionMaterial);
+      scene.add(line);
+    }
+
+    // Animation Loop for Main Hologram
+    function animateHologram() {
+      requestAnimationFrame(animateHologram);
+      nodes.forEach(node => {
+        node.rotation.y += 0.02;
+        scene.children.forEach(child => {
+          if (child.parentNode === node) {
+            child.userData.angle += 0.05;
+            child.position.set(
+              node.position.x + Math.cos(child.userData.angle) * child.userData.radius,
+              Math.sin(child.userData.angle) * child.userData.radius,
+              0
+            );
+          }
+        });
+      });
+      renderer.render(scene, camera);
+    }
+    animateHologram();
+
+    // Interaction with Hologram Nodes
+    const raycaster = new THREE.Raycaster();
+    const mouseVector = new THREE.Vector2();
+    hologramCanvas.addEventListener('click', (e) => {
+      const rect = hologramCanvas.getBoundingClientRect();
+      mouseVector.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseVector.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouseVector, camera);
+      const intersects = raycaster.intersectObjects(nodes);
+      if (intersects.length > 0) {
+        const item = intersects[0].object.userData;
+        alert(`Category: ${item.title}\nAchievements: ${item.achievements}\nSkills: ${item.skills.join(", ")}`);
+        const projection = new THREE.Mesh(
+          new THREE.BoxGeometry(5, 5, 5),
+          new THREE.MeshBasicMaterial({ color: 0x00B4D8, wireframe: true })
+        );
+        projection.position.set(item.x, 10, 0);
+        scene.add(projection);
+        gsap.to(projection.scale, { x: 2, y: 2, z: 2, duration: 1, yoyo: true, repeat: 1 });
+      }
+    });
+
+    // Scroll Background Transition
+    window.addEventListener('scroll', () => {
+      const section = document.querySelector('.experience-section');
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.5) {
+        section.classList.add('shapes');
+      } else {
+        section.classList.remove('shapes');
+      }
+    });
+
+    // Spotlight Effect
+    document.querySelectorAll('.holo-item').forEach(item => {
+      item.addEventListener('mousemove', (e) => {
+        const spotlight = item.querySelector('.spotlight');
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spotlight.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 180, 216, 0.3) 0%, transparent 70%)`;
+      });
+    });
+
+    // Sound Effect (Ping on Hover)
+    let soundEnabled = false;
+    const pingSound = new Audio('https://www.soundjay.com/buttons/ping-01.mp3');
+    pingSound.volume = 0.3;
+    document.querySelectorAll('.holo-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        if (soundEnabled) pingSound.play();
+      });
+    });
+
+    // Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.querySelector('.progress-bar').style.width = progress + '%';
+    });
+
+    // Mouse Trail Effect
+    document.addEventListener('mousemove', (e) => {
+      const trail = document.createElement('div');
+      trail.className = 'mouse-trail';
+      trail.style.left = e.clientX + 'px';
+      trail.style.top = e.clientY + 'px';
+      document.body.appendChild(trail);
+      setTimeout(() => {
+        trail.style.opacity = '0';
+        setTimeout(() => trail.remove(), 500);
+      }, 300);
+    });
+
+    // 3D Tilt Effect for Cards
+    document.querySelectorAll('.holo-item').forEach(item => {
+      item.addEventListener('mousemove', (e) => {
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const tiltX = (y / rect.height) * 20;
+        const tiltY = -(x / rect.width) * 20;
+        item.querySelector('.holo-content').style.transform = `rotateY(${tiltY}deg) rotateX(${tiltX}deg)`;
+      });
+      item.addEventListener('mouseleave', () => {
+        item.querySelector('.holo-content').style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
+    });
+
+    // GSAP Animations
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.from('.fade-in', { opacity: 0, duration: 1, stagger: 0.2 });
+      gsap.from('.slide-in', { y: 50, opacity: 0, duration: 0.8, stagger: 0.2 });
+    });
+  </script>
+</body>
+</html>

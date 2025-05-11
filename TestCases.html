@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cases</title>
+    <!-- Use a pre-built Tailwind CSS file instead of the CDN -->
+    <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #e5e7eb;
+            overflow-x: hidden;
+        }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .test-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .test-card:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        }
+        .modal {
+            display: none;
+            background: rgba(0, 0, 0, 0.9);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        .auth-modal-content {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+        .close-btn:hover {
+            color: #ffffff;
+        }
+        .priority-low { background-color: #10b981; }
+        .priority-medium { background-color: #f59e0b; }
+        .priority-high { background-color: #ef4444; }
+        .btn-primary {
+            background: #3b82f6;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+        .btn-danger {
+            background: #ef4444;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+        .btn-edit {
+            background: #f59e0b;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-edit:hover {
+            background: #d97706;
+            transform: scale(1.05);
+        }
+        .btn-back {
+            background: #6b7280;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-back:hover {
+            background: #4b5563;
+            transform: scale(1.05);
+        }
+        .owner-icon {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            background-color: #f59e0b;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+        .password-input {
+            background: #1e293b;
+            border: 1px solid #4b5563;
+            color: #e5e7eb;
+            padding: 0.5rem;
+            border-radius: 8px;
+            width: 100%;
+            transition: border-color 0.3s ease;
+        }
+        .password-input:focus {
+            border-color: #3b82f6;
+            outline: none;
+        }
+        /* Additional Tailwind classes not available in pre-built version */
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .flex-1 {
+            flex: 1 1 0%;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <div class="container mx-auto px-4 py-16 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+            <div class="flex items-center space-x-4">
+                <button onclick="goBack()" class="btn-back text-white px-6 py-2 rounded-lg">Back</button>
+                <h1 class="text-4xl md:text-5xl font-bold">Test Cases</h1>
+            </div>
+            <button onclick="openCreateModal()" class="btn-primary text-white px-6 py-2 rounded-lg mt-4 md:mt-0">Create New Test Case</button>
+        </div>
+
+        <!-- Test Cases Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="testCasesGrid">
+            <!-- Test cases will be inserted via JS -->
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Test Case -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">×</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Creating Test Case -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeCreateModal()">×</span>
+            <h2 class="text-2xl font-bold mb-6">Create New Test Case</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-400">Title</label>
+                    <input id="newTitle" type="text" class="w-full p-2 rounded bg-gray-700 text-white" required>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Description</label>
+                    <textarea id="newDescription" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Preconditions</label>
+                    <textarea id="newPreconditions" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Steps (one per line)</label>
+                    <textarea id="newSteps" class="w-full p-2 rounded bg-gray-700 text-white" rows="5"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Expected Result</label>
+                    <textarea id="newExpected" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Priority</label>
+                    <select id="newPriority" class="w-full p-2 rounded bg-gray-700 text-white">
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Category</label>
+                    <select id="newCategory" class="w-full p-2 rounded bg-gray-700 text-white">
+                        <option value="Functional">Functional</option>
+                        <option value="UI">UI</option>
+                        <option value="Performance">Performance</option>
+                        <option value="Security">Security</option>
+                        <option value="Integration">Integration</option>
+                        <option value="Regression">Regression</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Test Data</label>
+                    <textarea id="newTestData" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Environment</label>
+                    <textarea id="newEnvironment" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Owner</label>
+                    <input id="newOwner" type="text" class="w-full p-2 rounded bg-gray-700 text-white" placeholder="Enter owner name">
+                </div>
+                <div>
+                    <label class="block text-gray-400">Estimated Run Time (hh:mm)</label>
+                    <input id="newRunTime" type="text" class="w-full p-2 rounded bg-gray-700 text-white" placeholder="e.g., 00:10">
+                </div>
+                <button onclick="createTestCase()" class="btn-primary text-white px-6 py-2 rounded-lg w-full">Save Test Case</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Editing Test Case -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditModal()">×</span>
+            <h2 class="text-2xl font-bold mb-6">Edit Test Case</h2>
+            <div class="space-y-4">
+                <input id="editId" type="hidden">
+                <div>
+                    <label class="block text-gray-400">Title</label>
+                    <input id="editTitle" type="text" class="w-full p-2 rounded bg-gray-700 text-white" required>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Description</label>
+                    <textarea id="editDescription" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Preconditions</label>
+                    <textarea id="editPreconditions" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Steps (one per line)</label>
+                    <textarea id="editSteps" class="w-full p-2 rounded bg-gray-700 text-white" rows="5"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Expected Result</label>
+                    <textarea id="editExpected" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Priority</label>
+                    <select id="editPriority" class="w-full p-2 rounded bg-gray-700 text-white">
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Category</label>
+                    <select id="editCategory" class="w-full p-2 rounded bg-gray-700 text-white">
+                        <option value="Functional">Functional</option>
+                        <option value="UI">UI</option>
+                        <option value="Performance">Performance</option>
+                        <option value="Security">Security</option>
+                        <option value="Integration">Integration</option>
+                        <option value="Regression">Regression</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Test Data</label>
+                    <textarea id="editTestData" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Environment</label>
+                    <textarea id="editEnvironment" class="w-full p-2 rounded bg-gray-700 text-white" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-400">Owner</label>
+                    <input id="editOwner" type="text" class="w-full p-2 rounded bg-gray-700 text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400">Estimated Run Time (hh:mm)</label>
+                    <input id="editRunTime" type="text" class="w-full p-2 rounded bg-gray-700 text-white" placeholder="e.g., 00:10">
+                </div>
+                <button onclick="updateTestCase()" class="btn-primary text-white px-6 py-2 rounded-lg w-full">Update Test Case</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Password Confirmation to Edit -->
+    <div id="editAuthModal" class="modal">
+        <div class="auth-modal-content">
+            <span class="close-btn" onclick="closeEditAuthModal()">×</span>
+            <h2 class="text-xl font-bold mb-4">Admin Password Required</h2>
+            <p class="mb-4">Please enter the admin password to edit this test case:</p>
+            <input id="editAdminPassword" type="password" class="password-input mb-4" placeholder="Enter password">
+            <button onclick="confirmEditAccess()" class="btn-primary text-white px-6 py-2 rounded-lg w-full">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Modal for Password Confirmation to Delete -->
+    <div id="deleteModal" class="modal">
+        <div class="auth-modal-content">
+            <span class="close-btn" onclick="closeDeleteModal()">×</span>
+            <h2 class="text-xl font-bold mb-4">Admin Password Required</h2>
+            <p class="mb-4">Please enter the admin password to delete this test case:</p>
+            <input id="adminPassword" type="password" class="password-input mb-4" placeholder="Enter password">
+            <button onclick="confirmDelete()" class="btn-danger text-white px-6 py-2 rounded-lg w-full">Confirm Delete</button>
+        </div>
+    </div>
+
+    <script>
+        // Particles.js Configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#60a5fa' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.3, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#60a5fa', opacity: 0.2, width: 1 },
+                move: { enable: true, speed: 2, direction: 'none', random: false }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                modes: { grab: { distance: 200, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 } }
+            },
+            retina_detect: true
+        });
+
+        // Admin Password (Hardcoded for demo purposes; in production, store securely)
+        const ADMIN_PASSWORD = "Adm!n2025#xAI";
+
+        // Default Test Cases (Realistic and Detailed)
+        const defaultTestCases = [
+            {
+                id: "TC-001",
+                title: "Verify Successful User Login with Valid Credentials",
+                description: "Ensure that a user can log in to the application using valid credentials and is redirected to the dashboard.",
+                preconditions: "1. The application is accessible via URL: https://app.example.com.\n2. A test user account exists with email 'testuser@example.com' and password 'SecurePass$2025'.\n3. The user is not logged in.",
+                steps: [
+                    "Navigate to the login page at https://app.example.com/login.",
+                    "Enter the email 'testuser@example.com' in the email field.",
+                    "Enter the password 'SecurePass$2025' in the password field.",
+                    "Click the 'Sign In' button.",
+                    "Wait for the page to load."
+                ],
+                expected: "The user is successfully logged in and redirected to the dashboard at https://app.example.com/dashboard. The dashboard displays the user's name 'Test User' in the top-right corner.",
+                priority: "High",
+                category: "Functional",
+                testData: "Email: testuser@example.com\nPassword: SecurePass$2025",
+                environment: "Google Chrome v122, Windows 11, App Version: 3.1.2",
+                owner: "Daniel Lantukh",
+                estimatedRunTime: "00:05",
+                isProtected: true // Mark as protected (requires password for edit/delete)
+            },
+            {
+                id: "TC-002",
+                title: "Verify Adding a Product to Cart Updates Cart Count",
+                description: "Ensure that adding a product to the cart increases the cart item count and displays the correct product details in the cart.",
+                preconditions: "1. The user is logged in with email 'testuser@example.com'.\n2. The product catalog page is accessible at https://app.example.com/products.\n3. The product 'Wireless Mouse' (ID: PRD123) is available in the catalog.",
+                steps: [
+                    "Navigate to the product catalog page at https://app.example.com/products.",
+                    "Locate the product 'Wireless Mouse' (ID: PRD123).",
+                    "Click the 'Add to Cart' button next to the product.",
+                    "Wait for the cart update confirmation message to appear.",
+                    "Click the cart icon in the top-right corner to view the cart.",
+                    "Verify the cart contents."
+                ],
+                expected: "The cart count in the top-right corner increases by 1. The cart page displays the 'Wireless Mouse' with quantity 1 and price $29.99.",
+                priority: "Medium",
+                category: "Functional",
+                testData: "Product: Wireless Mouse\nProduct ID: PRD123\nPrice: $29.99",
+                environment: "Firefox v118, macOS Ventura 13.5, App Version: 3.1.2",
+                owner: "Daniel Lantukh",
+                estimatedRunTime: "00:07",
+                isProtected: true
+            },
+            {
+                id: "TC-003",
+                title: "Verify Feedback Form Submission with Mandatory Fields",
+                description: "Ensure that the feedback form can be submitted successfully when all mandatory fields are filled, and a success message is displayed.",
+                preconditions: "1. The user is on the feedback page at https://app.example.com/feedback.\n2. The user is logged in with email 'testuser@example.com'.",
+                steps: [
+                    "Navigate to the feedback page at https://app.example.com/feedback.",
+                    "Enter 'Test User' in the 'Name' field.",
+                    "Enter 'testuser@example.com' in the 'Email' field.",
+                    "Select 'Feature Request' from the 'Category' dropdown.",
+                    "Enter 'Please add a dark mode feature to the application.' in the 'Message' field.",
+                    "Click the 'Submit Feedback' button.",
+                    "Wait for the response."
+                ],
+                expected: "A success message 'Thank you for your feedback!' is displayed. The form fields are cleared.",
+                priority: "Low",
+                category: "UI",
+                testData: "Name: Test User\nEmail: testuser@example.com\nCategory: Feature Request\nMessage: Please add a dark mode feature to the application.",
+                environment: "Safari v17, iOS 17.1, App Version: 3.1.2",
+                owner: "Daniel Lantukh",
+                estimatedRunTime: "00:06",
+                isProtected: true
+            },
+            {
+                id: "TC-004",
+                title: "Verify API Response Time for User Data Retrieval",
+                description: "Ensure that the API endpoint for retrieving user data responds within the acceptable time limit of 500ms under normal load.",
+                preconditions: "1. The API endpoint /api/users/{userId} is accessible.\n2. A valid user ID 'USR789' exists in the system.\n3. The API token 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' is valid.",
+                steps: [
+                    "Send a GET request to /api/users/USR789 with header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'.",
+                    "Record the response time using a performance monitoring tool.",
+                    "Verify the response status code.",
+                    "Compare the response time with the threshold of 500ms."
+                ],
+                expected: "The API responds with a 200 OK status code. The response time is less than 500ms. The response body contains the user data for ID 'USR789'.",
+                priority: "Medium",
+                category: "Performance",
+                testData: "User ID: USR789\nAPI Token: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
+                environment: "Postman v10.5, Windows 11, API Version: 2.0.1",
+                owner: "Daniel Lantukh",
+                estimatedRunTime: "00:10",
+                isProtected: true
+            },
+            {
+                id: "TC-005",
+                title: "Verify Protection Against SQL Injection in Login Form",
+                description: "Ensure that the login form rejects SQL injection attempts and does not allow unauthorized access.",
+                preconditions: "1. The login page is accessible at https://app.example.com/login.\n2. The user is not logged in.",
+                steps: [
+                    "Navigate to the login page at https://app.example.com/login.",
+                    "Enter the email field with malicious input: ' OR '1'='1' --.",
+                    "Enter the password field with any value, e.g., 'password'.",
+                    "Click the 'Sign In' button.",
+                    "Observe the response."
+                ],
+                expected: "The login attempt fails. An error message 'Invalid credentials' is displayed. No unauthorized access is granted.",
+                priority: "High",
+                category: "Security",
+                testData: "Email Input: ' OR '1'='1' --\nPassword: password",
+                environment: "Google Chrome v122, Linux Ubuntu 22.04, App Version: 3.1.2",
+                owner: "Daniel Lantukh",
+                estimatedRunTime: "00:08",
+                isProtected: true
+            },
+            {
+                id: "TC-006",
+                title: "Verify Payment Gateway Integration for Checkout",
+                description: "Ensure that the payment gateway integration works correctly during checkout, processes the payment, and updates the order status.",
+                preconditions: "1. The user is logged in with email 'testuser@example.com'.\n2. The cart contains one item: 'Wireless Mouse' (ID: PRD123, Price: $29.99).\n3. A test payment gateway account is configured with Stripe (test key: sk_test_123456).",
+                steps: [
+                    "Navigate to the cart page at https://app.example.com/cart.",
+                    "Click the 'Proceed to Checkout' button.",
+                    "On the checkout page, enter the billing details: Name: Test User, Address: 123 Main St, City: New York, ZIP: 10001.",
+                    "Enter the payment details: Card Number: 4242 4242 4242 4242, Expiry: 12/26, CVV: 123.",
+                    "Click the 'Pay Now' button.",
+                    "Wait for the payment confirmation."
+                ],
+                expected: "The payment is processed successfully. A confirmation message 'Payment Successful! Order #ORD987654 has been placed.' is displayed. The order status in the user's order history is updated to 'Processing'.",
+                priority: "High",
+                category: "Integration",
+                testData: "Product: Wireless Mouse\nProduct ID: PRD123\nPrice: $29.99\nCard Number: 4242 4242 4242 4242\nExpiry: 12/26\nCVV: 123",
+                environment: "Edge v120, Windows 11, App Version: 3.1.2",
+                owner: "Daniel Lantukh",
+                estimatedRunTime: "00:12",
+                isProtected: true
+            }
+        ];
+
+        // Load Test Cases from localStorage or use default
+        let testCases = JSON.parse(localStorage.getItem('testCases')) || defaultTestCases;
+
+        // Save Test Cases to localStorage
+        function saveTestCases() {
+            localStorage.setItem('testCases', JSON.stringify(testCases));
+        }
+
+        // Render Test Cases
+        function renderTestCases() {
+            const grid = document.getElementById('testCasesGrid');
+            grid.innerHTML = '';
+            testCases.forEach(test => {
+                const card = document.createElement('div');
+                card.className = 'test-card p-6 cursor-pointer';
+                card.innerHTML = `
+                    <h2 class="text-xl font-semibold mb-3">${test.title}</h2>
+                    <p class="text-gray-400 mb-3 line-clamp-2">${test.description}</p>
+                    <p class="mb-2"><strong>Priority:</strong> <span class="inline-block px-2 py-1 rounded text-white priority-${test.priority.toLowerCase()}">${test.priority}</span></p>
+                    <p class="mb-2"><strong>Category:</strong> ${test.category}</p>
+                    <p class="mb-2"><strong>Owner:</strong> <span class="owner-icon"></span>${test.owner || 'Not assigned'}</p>
+                    <p><strong>Est. Run Time:</strong> ${test.estimatedRunTime}</p>
+                `;
+                card.onclick = () => openModal(test);
+                grid.appendChild(card);
+            });
+            gsap.from('.test-card', { y: 50, opacity: 0, stagger: 0.2, duration: 0.8, ease: 'power3.out' });
+        }
+
+        let testCaseToDelete = null;
+        let testCaseToEdit = null;
+
+        // Function to go back to Documentation.html
+        function goBack() {
+            window.location.href = "Documentation.html";
+        }
+
+        // Check if a test case is protected (first 6 test cases)
+        function isProtectedTestCase(testId) {
+            const protectedIds = ["TC-001", "TC-002", "TC-003", "TC-004", "TC-005", "TC-006"];
+            return protectedIds.includes(testId);
+        }
+
+        // Open View Modal
+        function openModal(test) {
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <h2 class="text-2xl font-bold mb-6">${test.title}</h2>
+                <div class="space-y-6">
+                    <div>
+                        <strong class="block text-gray-400">ID:</strong>
+                        <p>${test.id}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Description:</strong>
+                        <p>${test.description}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Preconditions:</strong>
+                        <p style="white-space: pre-line">${test.preconditions}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Priority:</strong>
+                        <span class="inline-block px-2 py-1 rounded text-white priority-${test.priority.toLowerCase()}">${test.priority}</span>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Category:</strong>
+                        <p>${test.category}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Owner:</strong>
+                        <p><span class="owner-icon"></span>${test.owner || 'Not assigned'}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Estimated Run Time:</strong>
+                        <p>${test.estimatedRunTime}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Test Data:</strong>
+                        <p style="white-space: pre-line">${test.testData}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Environment:</strong>
+                        <p>${test.environment}</p>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Steps:</strong>
+                        <ol class="list-decimal pl-5">
+                            ${test.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-400">Expected Result:</strong>
+                        <p>${test.expected}</p>
+                    </div>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="handleEdit('${test.id}')" class="btn-edit text-white px-6 py-2 rounded-lg flex-1">Edit Test Case</button>
+                        <button onclick="handleDelete('${test.id}')" class="btn-danger text-white px-6 py-2 rounded-lg flex-1">Delete Test Case</button>
+                    </div>
+                </div>
+            `;
+            const modal = document.getElementById('modal');
+            modal.style.display = 'flex';
+            gsap.fromTo('.modal-content', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+
+            // Add event listener to close modal when clicking outside
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Close View Modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                modal.style.display = 'none';
+                modal.removeEventListener('click', closeModal); // Clean up event listener
+            }});
+        }
+
+        // Open Create Modal
+        function openCreateModal() {
+            const modal = document.getElementById('createModal');
+            modal.style.display = 'flex';
+            gsap.fromTo('.modal-content', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+
+            // Add event listener to close modal when clicking outside
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeCreateModal();
+                }
+            });
+        }
+
+        // Close Create Modal
+        function closeCreateModal() {
+            const modal = document.getElementById('createModal');
+            gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                modal.style.display = 'none';
+                modal.removeEventListener('click', closeCreateModal); // Clean up event listener
+            }});
+        }
+
+        // Create New Test Case
+        function createTestCase() {
+            const title = document.getElementById('newTitle').value;
+            if (!title) {
+                alert('Title is required!');
+                return;
+            }
+
+            const newTestCase = {
+                id: `TC-${String(testCases.length + 1).padStart(3, '0')}`,
+                title: title,
+                description: document.getElementById('newDescription').value || "No description provided.",
+                preconditions: document.getElementById('newPreconditions').value || "None.",
+                steps: document.getElementById('newSteps').value.split('\n').filter(step => step.trim()),
+                expected: document.getElementById('newExpected').value || "No expected result provided.",
+                priority: document.getElementById('newPriority').value,
+                category: document.getElementById('newCategory').value,
+                testData: document.getElementById('newTestData').value || "None.",
+                environment: document.getElementById('newEnvironment').value || "Not specified.",
+                owner: document.getElementById('newOwner').value || "", // Owner can be empty
+                estimatedRunTime: document.getElementById('newRunTime').value || "00:00",
+                isProtected: false // New test cases are not protected
+            };
+
+            testCases.push(newTestCase);
+            saveTestCases(); // Save to localStorage
+            renderTestCases();
+            closeCreateModal();
+
+            // Clear form
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newDescription').value = '';
+            document.getElementById('newPreconditions').value = '';
+            document.getElementById('newSteps').value = '';
+            document.getElementById('newExpected').value = '';
+            document.getElementById('newTestData').value = '';
+            document.getElementById('newEnvironment').value = '';
+            document.getElementById('newOwner').value = '';
+            document.getElementById('newRunTime').value = '';
+        }
+
+        // Handle Edit (Check if password is required)
+        function handleEdit(testId) {
+            if (isProtectedTestCase(testId)) {
+                openEditAuthModal(testId);
+            } else {
+                const test = testCases.find(t => t.id === testId);
+                if (!test) return;
+
+                document.getElementById('editId').value = test.id;
+                document.getElementById('editTitle').value = test.title;
+                document.getElementById('editDescription').value = test.description;
+                document.getElementById('editPreconditions').value = test.preconditions;
+                document.getElementById('editSteps').value = test.steps.join('\n');
+                document.getElementById('editExpected').value = test.expected;
+                document.getElementById('editPriority').value = test.priority;
+                document.getElementById('editCategory').value = test.category;
+                document.getElementById('editTestData').value = test.testData;
+                document.getElementById('editEnvironment').value = test.environment;
+                document.getElementById('editOwner').value = test.owner;
+                document.getElementById('editRunTime').value = test.estimatedRunTime;
+
+                const modal = document.getElementById('editModal');
+                modal.style.display = 'flex';
+                gsap.fromTo('.modal-content', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+
+                // Add event listener to close modal when clicking outside
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeEditModal();
+                    }
+                });
+            }
+        }
+
+        // Handle Delete (Check if password is required)
+        function handleDelete(testId) {
+            if (isProtectedTestCase(testId)) {
+                openDeleteModal(testId);
+            } else {
+                testCases = testCases.filter(test => test.id !== testId);
+                saveTestCases(); // Save to localStorage
+                renderTestCases();
+                closeModal();
+            }
+        }
+
+        // Open Edit Auth Modal
+        function openEditAuthModal(testId) {
+            testCaseToEdit = testId;
+            const modal = document.getElementById('editAuthModal');
+            modal.style.display = 'flex';
+            gsap.fromTo('.auth-modal-content', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+
+            // Add event listener to close modal when clicking outside
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeEditAuthModal();
+                }
+            });
+        }
+
+        // Close Edit Auth Modal
+        function closeEditAuthModal() {
+            const modal = document.getElementById('editAuthModal');
+            gsap.to('.auth-modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                modal.style.display = 'none';
+                document.getElementById('editAdminPassword').value = '';
+                testCaseToEdit = null;
+                modal.removeEventListener('click', closeEditAuthModal); // Clean up event listener
+            }});
+        }
+
+        // Confirm Edit Access
+        function confirmEditAccess() {
+            const password = document.getElementById('editAdminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                const test = testCases.find(t => t.id === testCaseToEdit);
+                if (!test) return;
+
+                document.getElementById('editId').value = test.id;
+                document.getElementById('editTitle').value = test.title;
+                document.getElementById('editDescription').value = test.description;
+                document.getElementById('editPreconditions').value = test.preconditions;
+                document.getElementById('editSteps').value = test.steps.join('\n');
+                document.getElementById('editExpected').value = test.expected;
+                document.getElementById('editPriority').value = test.priority;
+                document.getElementById('editCategory').value = test.category;
+                document.getElementById('editTestData').value = test.testData;
+                document.getElementById('editEnvironment').value = test.environment;
+                document.getElementById('editOwner').value = test.owner;
+                document.getElementById('editOwner').setAttribute('readonly', 'true'); // Make owner readonly for protected test cases
+                document.getElementById('editRunTime').value = test.estimatedRunTime;
+
+                const modal = document.getElementById('editModal');
+                modal.style.display = 'flex';
+                gsap.fromTo('.modal-content', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+                closeEditAuthModal();
+
+                // Add event listener to close modal when clicking outside
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeEditModal();
+                    }
+                });
+            } else {
+                alert('Incorrect password! Please try again.');
+                document.getElementById('editAdminPassword').value = '';
+            }
+        }
+
+        // Close Edit Modal
+        function closeEditModal() {
+            const modal = document.getElementById('editModal');
+            gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                modal.style.display = 'none';
+                modal.removeEventListener('click', closeEditModal); // Clean up event listener
+            }});
+        }
+
+        // Update Test Case
+        function updateTestCase() {
+            const id = document.getElementById('editId').value;
+            const title = document.getElementById('editTitle').value;
+            if (!title) {
+                alert('Title is required!');
+                return;
+            }
+
+            const index = testCases.findIndex(t => t.id === id);
+            if (index === -1) return;
+
+            testCases[index] = {
+                ...testCases[index],
+                title: title,
+                description: document.getElementById('editDescription').value || "No description provided.",
+                preconditions: document.getElementById('editPreconditions').value || "None.",
+                steps: document.getElementById('editSteps').value.split('\n').filter(step => step.trim()),
+                expected: document.getElementById('editExpected').value || "No expected result provided.",
+                priority: document.getElementById('editPriority').value,
+                category: document.getElementById('editCategory').value,
+                testData: document.getElementById('editTestData').value || "None.",
+                environment: document.getElementById('editEnvironment').value || "Not specified.",
+                owner: document.getElementById('editOwner').value || "",
+                estimatedRunTime: document.getElementById('editRunTime').value || "00:00"
+            };
+
+            saveTestCases(); // Save to localStorage
+            renderTestCases();
+            closeEditModal();
+            closeModal();
+        }
+
+        // Open Delete Modal
+        function openDeleteModal(testId) {
+            testCaseToDelete = testId;
+            const modal = document.getElementById('deleteModal');
+            modal.style.display = 'flex';
+            gsap.fromTo('.auth-modal-content', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3 });
+
+            // Add event listener to close modal when clicking outside
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeDeleteModal();
+                }
+            });
+        }
+
+        // Close Delete Modal
+        function closeDeleteModal() {
+            const modal = document.getElementById('deleteModal');
+            gsap.to('.auth-modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                modal.style.display = 'none';
+                document.getElementById('adminPassword').value = '';
+                testCaseToDelete = null;
+                modal.removeEventListener('click', closeDeleteModal); // Clean up event listener
+            }});
+        }
+
+        // Confirm Delete
+        function confirmDelete() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                testCases = testCases.filter(test => test.id !== testCaseToDelete);
+                saveTestCases(); // Save to localStorage
+                renderTestCases();
+                closeDeleteModal();
+                closeModal();
+            } else {
+                alert('Incorrect password! Please try again.');
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+
+        // Check if a test case is protected (first 6 test cases)
+        function isProtectedTestCase(testId) {
+            const protectedIds = ["TC-001", "TC-002", "TC-003", "TC-004", "TC-005", "TC-006"];
+            return protectedIds.includes(testId);
+        }
+
+        // Initialization
+        renderTestCases();
+    </script>
+</body>
+</html>

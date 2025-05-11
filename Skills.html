@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Lantukh - Skills</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #FFFFFF;
+      color: #1A2533;
+      margin: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease-in forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .hero {
+      background: linear-gradient(rgba(13, 26, 59, 0.9), rgba(13, 26, 59, 0.9)), url('https://source.unsplash.com/random/1920x1080?technology');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      min-height: 60vh;
+    }
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .holo-btn {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00B4D8;
+    }
+    .holo-btn:hover {
+      box-shadow: 0 0 20px #00B4D8, 0 0 30px #00B4D8;
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      width: 0;
+      z-index: 30;
+      transition: width 0.2s ease;
+    }
+    .linkedin-badge {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .linkedin-badge:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00B4D8;
+    }
+    footer {
+      position: relative;
+      background: #0D1A3B;
+      color: #FFFFFF;
+      padding: 40px 20px;
+      border-top: 2px solid #00B4D8;
+      z-index: 10;
+    }
+    .rotate-3d {
+      transition: transform 0.5s ease;
+    }
+    .rotate-3d:hover {
+      transform: rotateY(20deg) rotateX(10deg);
+    }
+    .skills-section {
+      position: relative;
+      padding: 80px 0;
+      background: #FFFFFF;
+    }
+    .skills-section .bg-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .skill-card {
+      position: relative;
+      padding: 20px;
+      background: #F0F4F8;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: scale(0.8) rotate(5deg);
+      z-index: 2;
+      border: 2px solid transparent;
+    }
+    .skill-card:hover {
+      box-shadow: 0 10px 20px rgba(0, 180, 216, 0.3);
+      transform: translateY(-5px) rotate(0deg);
+      border-image: linear-gradient(to right, #00B4D8, #FFD700) 1;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { border-image: linear-gradient(to right, #00B4D8, #FFD700) 1; }
+      50% { border-image: linear-gradient(to right, #FFD700, #00B4D8) 1; }
+      100% { border-image: linear-gradient(to right, #00B4D8, #FFD700) 1; }
+    }
+    .skill-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .skill-node {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      border-radius: 50%;
+      background: #00B4D8;
+      transition: transform 0.3s ease;
+    }
+    .skill-item:hover .skill-node {
+      transform: scale(1.5);
+      box-shadow: 0 0 10px #FFD700;
+    }
+    .glow-trail {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #FFD700;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
+    }
+    .icon-hover {
+      transition: transform 0.3s ease;
+    }
+    .icon-hover:hover {
+      transform: scale(1.2);
+    }
+    #skill-constellation {
+      width: 100%;
+      height: 300px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .holo-popup {
+      position: absolute;
+      background: linear-gradient(135deg, #1A2533, #00B4D8);
+      color: #FFFFFF;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .holo-popup.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 640px) {
+      footer {
+        padding: 20px 10px;
+      }
+      footer .flex {
+        flex-direction: column;
+        gap: 10px;
+      }
+      footer p, footer a {
+        font-size: 14px;
+      }
+      .hero {
+        min-height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="bg-midnight-900 text-white fixed w-full top-0 shadow-lg z-20">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold">Daniel Lantukh</a>
+      <div class="space-x-6">
+        <a href="about.html" class="nav-link hover:text-electric-400 transition">About</a>
+        <a href="experience.html" class="nav-link hover:text-electric-400 transition">Experience</a>
+        <a href="skills.html" class="nav-link hover:text-electric-400 transition">Skills</a>
+        <a href="Documentation.html" class="nav-link hover:text-electric-400 transition">Documentation</a>
+        <a href="contact.html" class="nav-link hover:text-electric-400 transition">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero text-white flex items-center justify-center pt-16 relative">
+    <canvas class="particles"></canvas>
+    <div class="container mx-auto px-4 text-center z-10">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 fade-in rotate-3d">My Skills</h1>
+      <p class="text-lg max-w-2xl mx-auto mb-8 fade-in" style="animation-delay: 0.3s;">
+        A comprehensive set of technical and soft skills honed over 4+ years as a QA Engineer, specializing in automation testing and Agile collaboration.
+      </p>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section class="py-20 skills-section relative">
+    <canvas class="bg-particles"></canvas>
+    <div class="container mx-auto px-4 relative z-10">
+      <h2 class="text-3xl font-bold text-center text-midnight-900 mb-4 fade-in">Skills Overview</h2>
+      <div id="skill-constellation">
+        <div id="holo-popup" class="holo-popup"></div>
+      </div>
+      <div class="max-w-4xl mx-auto">
+        <!-- Technical Skills -->
+        <div class="skill-card" data-index="0">
+          <div class="flex items-center mb-2">
+            <svg class="w-8 h-8 mr-2 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19.5 8H17V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4.5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm9 12H6v-6h12v6z"/>
+            </svg>
+            <h3 class="text-xl font-semibold text-midnight-900">Technical Skills</h3>
+          </div>
+          <div class="text-gray-600">
+            <div class="skill-item"><div class="skill-node" style="width: 16px; height: 16px;"></div><p class="font-semibold">JavaScript</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 15px; height: 15px;"></div><p class="font-semibold">SQL</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 16px; height: 16px;"></div><p class="font-semibold">API Testing</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Cross-Browser Testing</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 13px; height: 13px;"></div><p class="font-semibold">HTML</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 12px; height: 12px;"></div><p class="font-semibold">CSS</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Git</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 15px; height: 15px;"></div><p class="font-semibold">RESTful APIs</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">JSON</p></div>
+          </div>
+        </div>
+        <!-- Testing Tools -->
+        <div class="skill-card" data-index="1">
+          <div class="flex items-center mb-2">
+            <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M19.5 8H17V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4.5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm9 12H6v-6h12v6z"/>
+            </svg>
+            <h3 class="text-xl font-semibold text-midnight-900">Testing Tools</h3>
+          </div>
+          <div class="text-gray-600">
+            <div class="skill-item"><div class="skill-node" style="width: 16px; height: 16px;"></div><p class="font-semibold">Cypress</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 15px; height: 15px;"></div><p class="font-semibold">Postman</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Swagger</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 15px; height: 15px;"></div><p class="font-semibold">Jira</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Zephyr Scale</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 13px; height: 13px;"></div><p class="font-semibold">TestFlight</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 13px; height: 13px;"></div><p class="font-semibold">Adminer</p></div>
+          </div>
+        </div>
+        <!-- Soft Skills -->
+        <div class="skill-card" data-index="2">
+          <div class="flex items-center mb-2">
+            <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+            </svg>
+            <h3 class="text-xl font-semibold text-midnight-900">Soft Skills</h3>
+          </div>
+          <div class="text-gray-600">
+            <div class="skill-item"><div class="skill-node" style="width: 15px; height: 15px;"></div><p class="font-semibold">Agile Collaboration</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Communication</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 13px; height: 13px;"></div><p class="font-semibold">Problem-Solving</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Time Management</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 15px; height: 15px;"></div><p class="font-semibold">Attention to Detail</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 13px; height: 13px;"></div><p class="font-semibold">Adaptability</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 12px; height: 12px;"></div><p class="font-semibold">Team Leadership</p></div>
+            <div class="skill-item"><div class="skill-node" style="width: 14px; height: 14px;"></div><p class="font-semibold">Critical Thinking</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="linkedin-badge fixed bottom-4 left-4 bg-electric-400 text-midnight-900 p-4 rounded-full shadow-lg holo-btn z-50">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+    </svg>
+  </a>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container mx-auto px-4 text-center">
+      <p class="mb-4">© 2025 Daniel Lantukh. All rights reserved.</p>
+      <div class="flex justify-center space-x-6">
+        <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="text-electric-400 hover:text-gold-400 transition">LinkedIn</a>
+        <a href="mailto:daniel.14146566@icloud.com" class="text-electric-400 hover:text-gold-400 transition">daniel.14146566@icloud.com</a>
+        <a href="tel:+14705199240" class="text-electric-400 hover:text-gold-400 transition">470-519-9240</a>
+      </div>
+      <p class="mt-4 text-sm opacity-75">Please reach out via email or phone if LinkedIn is unavailable.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Particle Network Background (Hero Section)
+    const heroCanvas = document.querySelector('.particles');
+    const heroCtx = heroCanvas.getContext('2d');
+    heroCanvas.width = window.innerWidth;
+    heroCanvas.height = window.innerHeight;
+    const heroParticles = [];
+    const maxDistance = 100;
+    for (let i = 0; i < 50; i++) {
+      heroParticles.push({
+        x: Math.random() * heroCanvas.width,
+        y: Math.random() * heroCanvas.height,
+        radius: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5
+      });
+    }
+    let mouse = { x: null, y: null };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    function animateHeroParticles() {
+      heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+      heroParticles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0 || p.x > heroCanvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > heroCanvas.height) p.speedY *= -1;
+        heroCtx.beginPath();
+        heroCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        heroCtx.fillStyle = '#00B4D8';
+        heroCtx.fill();
+        if (mouse.x && mouse.y) {
+          const dist = Math.sqrt((p.x - mouse.x) ** 2 + (p.y - mouse.y) ** 2);
+          if (dist < maxDistance) {
+            heroCtx.beginPath();
+            heroCtx.moveTo(p.x, p.y);
+            heroCtx.lineTo(mouse.x, mouse.y);
+            heroCtx.strokeStyle = `rgba(0, 180, 216, ${1 - dist / maxDistance})`;
+            heroCtx.stroke();
+          }
+        }
+        heroParticles.forEach(p2 => {
+          const dist = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+          if (dist < maxDistance) {
+            heroCtx.beginPath();
+            heroCtx.moveTo(p.x, p.y);
+            heroCtx.lineTo(p2.x, p2.y);
+            heroCtx.strokeStyle = `rgba(0, 180, 216, ${1 - dist / maxDistance})`;
+            heroCtx.stroke();
+          }
+        });
+      });
+      requestAnimationFrame(animateHeroParticles);
+    }
+    animateHeroParticles();
+
+    // Background Particles for Skills Section (Constellation Effect)
+    const bgCanvas = document.querySelector('.bg-particles');
+    const bgCtx = bgCanvas.getContext('2d');
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = document.querySelector('.skills-section').offsetHeight;
+    const bgParticles = [];
+    for (let i = 0; i < 100; i++) {
+      bgParticles.push({
+        x: Math.random() * bgCanvas.width,
+        y: Math.random() * bgCanvas.height,
+        radius: Math.random() * 1.5 + 0.5,
+        baseX: Math.random() * bgCanvas.width,
+        baseY: Math.random() * bgCanvas.height,
+        speed: Math.random() * 0.02 + 0.01,
+        amplitude: Math.random() * 10 + 5,
+        angle: Math.random() * Math.PI * 2
+      });
+    }
+    function animateBgParticles() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      bgParticles.forEach(p => {
+        p.angle += p.speed;
+        p.x = p.baseX + Math.cos(p.angle) * p.amplitude;
+        p.y = p.baseY + Math.sin(p.angle) * p.amplitude;
+        bgCtx.beginPath();
+        bgCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        bgCtx.fillStyle = `rgba(0, 180, 216, ${Math.sin(p.angle) * 0.5 + 0.5})`;
+        bgCtx.fill();
+        if (mouse.x && mouse.y) {
+          const dist = Math.sqrt((p.x - mouse.x) ** 2 + (p.y - mouse.y) ** 2);
+          if (dist < 150) {
+            bgCtx.beginPath();
+            bgCtx.moveTo(p.x, p.y);
+            bgCtx.lineTo(mouse.x, mouse.y);
+            bgCtx.strokeStyle = `rgba(255, 215, 0, ${1 - dist / 150})`;
+            bgCtx.stroke();
+          }
+        }
+      });
+      requestAnimationFrame(animateBgParticles);
+    }
+    animateBgParticles();
+
+    // Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.querySelector('.progress-bar').style.width = progress + '%';
+    });
+
+    // Reworked Animation for Skill Cards
+    const skillObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const item = entry.target;
+          const index = parseInt(item.getAttribute('data-index'));
+          gsap.to(item, {
+            opacity: 1,
+            scale: 1,
+            rotation: 0,
+            duration: 1,
+            ease: "elastic.out(1, 0.5)",
+            delay: index * 0.2
+          });
+          skillObserver.unobserve(item);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.skill-card').forEach(item => {
+      item.setAttribute('data-index', Array.from(document.querySelectorAll('.skill-card')).indexOf(item));
+      skillObserver.observe(item);
+    });
+
+    // Glow Trails on Skill Card Hover
+    document.querySelectorAll('.skill-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const trail = document.createElement('div');
+        trail.className = 'glow-trail';
+        trail.style.left = (e.clientX - rect.left) + 'px';
+        trail.style.top = (e.clientY - rect.top) + 'px';
+        card.appendChild(trail);
+        setTimeout(() => {
+          trail.style.opacity = '0';
+          setTimeout(() => trail.remove(), 500);
+        }, 300);
+      });
+    });
+
+    // 3D Interactive Skill Constellation
+    const skillConstellationContainer = document.getElementById('skill-constellation');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, skillConstellationContainer.clientWidth / 300, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(skillConstellationContainer.clientWidth, 300);
+    skillConstellationContainer.appendChild(renderer.domElement);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xFFD700, 1, 100);
+    pointLight.position.set(0, 0, 50);
+    scene.add(pointLight);
+
+    // Nebula Background (Simulated with Particles)
+    const nebulaParticles = [];
+    for (let i = 0; i < 200; i++) {
+      const geometry = new THREE.SphereGeometry(0.2, 8, 8);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00B4D8, transparent: true, opacity: 0.3 });
+      const particle = new THREE.Mesh(geometry, material);
+      particle.position.set(
+        (Math.random() - 0.5) * 100,
+        (Math.random() - 0.5) * 50,
+        (Math.random() - 0.5) * 50
+      );
+      scene.add(particle);
+      nebulaParticles.push(particle);
+    }
+
+    // Skill Nodes
+    const skills = [
+      { name: "JavaScript", description: "Proficient in writing automated tests and scripts.", size: 2.0 },
+      { name: "SQL", description: "Skilled in database querying and validation.", size: 1.8 },
+      { name: "API Testing", description: "Expert in validating APIs for functionality.", size: 2.0 },
+      { name: "Cross-Browser Testing", description: "Ensures UI consistency across browsers.", size: 1.6 },
+      { name: "HTML", description: "Comfortable with front-end structure.", size: 1.4 },
+      { name: "CSS", description: "Basic styling for test environments.", size: 1.2 },
+      { name: "Git", description: "Version control for test scripts.", size: 1.6 },
+      { name: "RESTful APIs", description: "Experienced in testing RESTful services.", size: 1.8 },
+      { name: "JSON", description: "Proficient in handling JSON data formats.", size: 1.6 },
+      { name: "Cypress", description: "Advanced automation testing expertise.", size: 2.2 },
+      { name: "Postman", description: "Skilled in API testing and debugging.", size: 2.0 },
+      { name: "Swagger", description: "Used for API documentation and testing.", size: 1.8 },
+      { name: "Jira", description: "Expert in defect tracking and management.", size: 2.0 },
+      { name: "Zephyr Scale", description: "Proficient in test case management.", size: 1.8 },
+      { name: "TestFlight", description: "Experienced in mobile app testing.", size: 1.6 },
+      { name: "Adminer", description: "Used for database management.", size: 1.6 },
+      { name: "Agile Collaboration", description: "Thrives in Agile team environments.", size: 2.0 },
+      { name: "Communication", description: "Strong team and client communication.", size: 1.8 },
+      { name: "Problem-Solving", description: "Effective at identifying and resolving issues.", size: 1.6 },
+      { name: "Time Management", description: "Efficient in meeting tight deadlines.", size: 1.8 },
+      { name: "Attention to Detail", description: "Ensures high-quality testing outcomes.", size: 2.0 },
+      { name: "Adaptability", description: "Quickly adapts to new tools and methods.", size: 1.6 },
+      { name: "Team Leadership", description: "Guides and mentors team members.", size: 1.4 },
+      { name: "Critical Thinking", description: "Analyzes issues with a strategic approach.", size: 1.8 }
+    ];
+
+    const skillNodes = [];
+    skills.forEach((skill, i) => {
+      const geometry = new THREE.SphereGeometry(skill.size, 16, 16);
+      const material = new THREE.MeshBasicMaterial({ color: 0xFFD700 });
+      const node = new THREE.Mesh(geometry, material);
+      const phi = Math.acos(-1 + (2 * i) / skills.length);
+      const theta = Math.sqrt(skills.length * Math.PI) * phi;
+      node.position.set(
+        30 * Math.cos(theta) * Math.sin(phi),
+        15 * Math.sin(theta) * Math.sin(phi),
+        15 * Math.cos(phi)
+      );
+      node.userData = { 
+        skill, 
+        basePosition: node.position.clone(), 
+        velocity: new THREE.Vector3(0, 0, 0),
+        force: new THREE.Vector3(0, 0, 0)
+      };
+      scene.add(node);
+      skillNodes.push(node);
+    });
+
+    // Connections Between Nodes
+    const connections = [];
+    skillNodes.forEach((node1, i) => {
+      for (let j = i + 1; j < skillNodes.length; j++) {
+        const node2 = skillNodes[j];
+        const distance = node1.position.distanceTo(node2.position);
+        if (distance < 20) {
+          const geometry = new THREE.BufferGeometry();
+          const positions = new Float32Array([
+            node1.position.x, node1.position.y, node1.position.z,
+            node2.position.x, node2.position.y, node2.position.z
+          ]);
+          geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          const material = new THREE.LineBasicMaterial({ color: 0x00B4D8, opacity: 0.3, transparent: true });
+          const line = new THREE.Line(geometry, material);
+          line.userData = { node1, node2 };
+          scene.add(line);
+          connections.push(line);
+        }
+      }
+    });
+
+    camera.position.set(0, 0, 60);
+    camera.lookAt(0, 0, 0);
+
+    // Holographic Popup
+    const popup = document.getElementById('holo-popup');
+
+    // Web Audio API for Ambient Sound
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(200, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    oscillator.start();
+    let isSoundPlaying = false;
+
+    function animateSkillConstellation() {
+      requestAnimationFrame(animateSkillConstellation);
+
+      // Update Node Positions with Physics
+      skillNodes.forEach(node => {
+        const { basePosition, velocity, force } = node.userData;
+        // Spring Force (Return to Base Position)
+        const springForce = basePosition.clone().sub(node.position).multiplyScalar(0.02);
+        force.add(springForce);
+
+        // Mouse Interaction (Attraction/Repulsion)
+        if (mouse.x && mouse.y) {
+          const mouseWorld = new THREE.Vector3();
+          mouseWorld.set(
+            (mouse.x / window.innerWidth) * 2 - 1,
+            -(mouse.y / window.innerHeight) * 2 + 1,
+            0.5
+          );
+          mouseWorld.unproject(camera);
+          const dir = mouseWorld.sub(camera.position).normalize();
+          const distance = 50;
+          const mousePos = camera.position.clone().add(dir.multiplyScalar(distance));
+          const mouseForce = mousePos.sub(node.position);
+          const dist = mouseForce.length();
+          if (dist < 20) {
+            force.sub(mouseForce.normalize().multiplyScalar(0.5));
+          } else if (dist < 40) {
+            force.add(mouseForce.normalize().multiplyScalar(0.2));
+          }
+        }
+
+        // Apply Forces
+        velocity.add(force);
+        velocity.multiplyScalar(0.95); // Damping
+        node.position.add(velocity);
+        force.set(0, 0, 0);
+      });
+
+      // Update Connections
+      connections.forEach(line => {
+        const { node1, node2 } = line.userData;
+        const positions = line.geometry.attributes.position.array;
+        positions[0] = node1.position.x;
+        positions[1] = node1.position.y;
+        positions[2] = node1.position.z;
+        positions[3] = node2.position.x;
+        positions[4] = node2.position.y;
+        positions[5] = node2.position.z;
+        line.geometry.attributes.position.needsUpdate = true;
+      });
+
+      // Update Point Light Position
+      if (mouse.x && mouse.y) {
+        const mouseWorld = new THREE.Vector3();
+        mouseWorld.set(
+          (mouse.x / window.innerWidth) * 2 - 1,
+          -(mouse.y / window.innerHeight) * 2 + 1,
+          0.5
+        );
+        mouseWorld.unproject(camera);
+        const dir = mouseWorld.sub(camera.position).normalize();
+        const distance = 50;
+        const mousePos = camera.position.clone().add(dir.multiplyScalar(distance));
+        pointLight.position.set(mousePos.x, mousePos.y, 50);
+      }
+
+      renderer.render(scene, camera);
+    }
+    animateSkillConstellation();
+
+    // Interaction with Nodes
+    const raycaster = new THREE.Raycaster();
+    const mouseVector = new THREE.Vector2();
+    skillConstellationContainer.addEventListener('mousemove', (e) => {
+      const rect = skillConstellationContainer.getBoundingClientRect();
+      mouseVector.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseVector.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouseVector, camera);
+      const intersects = raycaster.intersectObjects(skillNodes);
+      if (intersects.length > 0) {
+        const node = intersects[0].object;
+        node.scale.set(1.5, 1.5, 1.5);
+        node.material.color.set(0x00B4D8);
+        popup.classList.add('active');
+        popup.innerHTML = `<strong>${node.userData.skill.name}</strong><br>${node.userData.skill.description}`;
+        popup.style.left = `${e.clientX - rect.left + 10}px`;
+        popup.style.top = `${e.clientY - rect.top + 10}px`;
+        if (!isSoundPlaying) {
+          gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          isSoundPlaying = true;
+        }
+      } else {
+        skillNodes.forEach(node => {
+          node.scale.set(1, 1, 1);
+          node.material.color.set(0xFFD700);
+        });
+        popup.classList.remove('active');
+        if (isSoundPlaying) {
+          gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+          isSoundPlaying = false;
+        }
+      }
+    });
+
+    skillConstellationContainer.addEventListener('mouseleave', () => {
+      skillNodes.forEach(node => {
+        node.scale.set(1, 1, 1);
+        node.material.color.set(0xFFD700);
+      });
+      popup.classList.remove('active');
+      if (isSoundPlaying) {
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        isSoundPlaying = false;
+      }
+    });
+
+    // GSAP Animations for Other Elements
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.from('.fade-in', { opacity: 0, duration: 1, stagger: 0.2 });
+    });
+  </script>
+</body>
+</html>

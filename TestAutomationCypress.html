@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cypress Test Automation Showcase</title>
+    <!-- Use a pre-built Tailwind CSS file -->
+    <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #e5e7eb;
+            overflow-x: hidden;
+        }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-8px) rotateX(5deg);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+        }
+        .btn-primary {
+            background: #3b82f6;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: scale(1.05);
+        }
+        .btn-back {
+            background: #6b7280;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+        .btn-back:hover {
+            background: #4b5563;
+            transform: scale(1.05);
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <div class="container mx-auto px-4 py-16 relative z-10">
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+            <div class="flex items-center space-x-4">
+                <button onclick="goBack()" class="btn-back text-white px-6 py-2 rounded-lg">Back</button>
+                <h1 class="text-4xl md:text-5xl font-bold">Cypress Test Automation Showcase</h1>
+            </div>
+        </div>
+
+        <!-- Introduction Section -->
+        <div class="mb-16 text-center">
+            <h2 class="text-3xl font-semibold mb-4">Automated Testing with Cypress</h2>
+            <p class="text-gray-400 max-w-2xl mx-auto">
+                Explore my Cypress test automation project, designed to ensure robust and reliable web application testing. 
+                This repository demonstrates my expertise in writing maintainable test suites, integrating with CI/CD pipelines, 
+                and leveraging Cypress for end-to-end testing.
+            </p>
+        </div>
+
+        <!-- GitHub Repository Card -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="card p-6 cursor-pointer" onclick="window.open(https://github.com/Daniel-292/DevForge)">
+                <h2 class="text-2xl font-semibold mb-3">Cypress Automation Repository</h2>
+                <p class="text-gray-400 mb-4 line-clamp-3">
+                    This GitHub repository contains a comprehensive suite of Cypress tests for a web application, 
+                    including login, user management, and e-commerce workflows. The project showcases best practices 
+                    such as custom commands, page object models, and integration with GitHub Actions for CI/CD.
+                </p>
+                <div class="flex items-center space-x-4 mb-4">
+                    <span class="inline-block px-3 py-1 rounded bg-green-500 text-white">Cypress</span>
+                    <span class="inline-block px-3 py-1 rounded bg-blue-500 text-white">JavaScript</span>
+                    <span class="inline-block px-3 py-1 rounded bg-gray-500 text-white">CI/CD</span>
+                </div>
+                <a href="https://github.com/Daniel-292/DevForge" target="_blank" class="btn-primary text-white px-6 py-2 rounded-lg inline-block">
+                    View on GitHub
+                </a>
+            </div>
+            <div class="card p-6">
+                <h2 class="text-2xl font-semibold mb-3">Project Highlights</h2>
+                <ul class="text-gray-400 list-disc pl-5 space-y-2">
+                    <li>End-to-end tests for critical user journeys (e.g., login, checkout).</li>
+                    <li>Page Object Model (POM) for maintainable and scalable test code.</li>
+                    <li>Custom Cypress commands to simplify repetitive tasks.</li>
+                    <li>Integration with GitHub Actions for automated test execution.</li>
+                    <li>Comprehensive test reports with screenshots and videos on test failure.</li>
+                    <li>Handling of dynamic data and API testing with Cypress.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center mt-16">
+            <h3 class="text-2xl font-semibold mb-4">Interested in My Work?</h3>
+            <p class="text-gray-400 mb-6">
+                Check out the full codebase on GitHub or contact me to discuss how I can contribute to your team's testing efforts!
+            </p>
+            <a href="mailto:your.email@example.com" class="btn-primary text-white px-6 py-2 rounded-lg">
+                Contact Me
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Particles.js Configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#60a5fa' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.3, random: true },
+                size: { value: 3, random: true },
+                line_linked: { enable: true, distance: 150, color: '#60a5fa', opacity: 0.2, width: 1 },
+                move: { enable: true, speed: 2, direction: 'none', random: false }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' } },
+                modes: { grab: { distance: 200, line_linked: { opacity: 0.5 } }, push: { particles_nb: 4 } }
+            },
+            retina_detect: true
+        }),
+
+        // GSAP Animation for Cards
+        gsap.from('.card', { y: 50, opacity: 0, stagger: 0.2, duration: 0.8, ease: 'power3.out' });
+
+        // Function to go back to Documentation.html
+        function goBack() {
+            window.location.href = "Documentation.html";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daniel Lantukh - Experience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.167.1/build/three.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #FFFFFF;
+      color: #1A2533;
+      margin: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1s ease-in forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .slide-in {
+      transform: translateY(50px);
+      opacity: 0;
+      animation: slideIn 0.8s ease-out forwards;
+    }
+    @keyframes slideIn {
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .hero {
+      background: linear-gradient(rgba(13, 26, 59, 0.9), rgba(13, 26, 59, 0.9)), url('https://source.unsplash.com/random/1920x1080?technology');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      min-height: 60vh;
+    }
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .holo-btn {
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #00B4D8;
+    }
+    .holo-btn:hover {
+      box-shadow: 0 0 20px #00B4D8, 0 0 30px #00B4D8;
+    }
+    .nav-link {
+      position: relative;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(to right, #00B4D8, #FFD700);
+      width: 0;
+      z-index: 30;
+      transition: width 0.2s ease;
+    }
+    .linkedin-badge {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .linkedin-badge:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00B4D8;
+    }
+    footer {
+      position: relative;
+      background: #0D1A3B;
+      color: #FFFFFF;
+      padding: 40px 20px;
+      border-top: 2px solid #00B4D8;
+      z-index: 10;
+    }
+    .rotate-3d {
+      transition: transform 0.5s ease;
+    }
+    .rotate-3d:hover {
+      transform: rotateY(20deg) rotateX(10deg);
+    }
+    .timeline-item {
+      position: relative;
+      padding: 20px;
+      background: #FFFFFF;
+      border-radius: 10px;
+      margin-bottom: 40px;
+      perspective: 1000px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .timeline-item:hover {
+      box-shadow: 0 0 30px rgba(0, 180, 216, 0.5);
+      animation: glow 1.5s infinite;
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 10px #00B4D8; }
+      50% { box-shadow: 0 0 30px #FFD700; }
+    }
+    .timeline-content {
+      transform: rotateY(0deg);
+      transition: transform 0.3s ease;
+    }
+    .timeline-item:hover .timeline-content {
+      transform: rotateY(10deg) rotateX(5deg);
+    }
+    .timeline-item:hover .timeline-popup {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .timeline-popup {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 200px;
+      background: #1A2533;
+      color: #FFFFFF;
+      padding: 10px;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 10;
+    }
+    .spotlight {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(0, 180, 216, 0.3) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .timeline-item:hover .spotlight {
+      opacity: 1;
+    }
+    .experience-section {
+      position: relative;
+      background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('https://source.unsplash.com/random/1920x1080?work');
+      background-size: cover;
+      background-position: center;
+      transition: background 0.5s ease;
+    }
+    .experience-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #0D1A3B, #00B4D8);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .experience-section.shapes::before {
+      opacity: 0.8;
+    }
+    .shapes-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .metric-sphere {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, #00B4D8, #FFD700);
+      border-radius: 50%;
+      animation: rotateSphere 10s linear infinite;
+      cursor: pointer;
+    }
+    @keyframes rotateSphere {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .metric-sphere:hover .metric-text {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .metric-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .globe-container {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 100px;
+      height: 100px;
+      animation: glowGlobe 2s infinite;
+    }
+    @keyframes glowGlobe {
+      0%, 100% { filter: drop-shadow(0 0 5px #00B4D8); }
+      50% { filter: drop-shadow(0 0 15px #FFD700); }
+    }
+    .globe {
+      animation: rotateGlobe 20s linear infinite;
+    }
+    @keyframes rotateGlobe {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .mouse-trail {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #00B4D8;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0.7;
+      transition: opacity 0.5s ease;
+    }
+    .icon-hover {
+      transition: transform 0.3s ease;
+    }
+    .icon-hover:hover {
+      transform: scale(1.2);
+    }
+    #hologram-canvas {
+      width: 100%;
+      height: 300px;
+      margin-bottom: 40px;
+    }
+    .hologram-node {
+      cursor: pointer;
+    }
+    .hologram-node:hover {
+      animation: pulseNode 1s infinite;
+    }
+    @keyframes pulseNode {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+    @media (max-width: 640px) {
+      footer {
+        padding: 20px 10px;
+      }
+      footer .flex {
+        flex-direction: column;
+        gap: 10px;
+      }
+      footer p, footer a {
+        font-size: 14px;
+      }
+      .hero {
+        min-height: 50vh;
+      }
+      .timeline-popup {
+        left: 50%;
+        top: 100%;
+        transform: translate(-50%, 10px);
+      }
+      .timeline-item:hover .timeline-popup {
+        transform: translate(-50%, 0);
+      }
+      .globe-container {
+        width: 80px;
+        height: 80px;
+      }
+      #hologram-canvas {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Scroll Progress Bar -->
+  <div class="progress-bar"></div>
+
+  <!-- Navigation Bar -->
+  <nav class="bg-midnight-900 text-white fixed w-full top-0 shadow-lg z-20">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="index.html" class="text-xl font-bold">Daniel Lantukh</a>
+      <div class="space-x-6">
+        <a href="about.html" class="nav-link hover:text-electric-400 transition">About</a>
+        <a href="experience.html" class="nav-link hover:text-electric-400 transition">Experience</a>
+        <a href="skills.html" class="nav-link hover:text-electric-400 transition">Skills</a>
+        <a href="Documentation.html" class="nav-link hover:text-electric-400 transition">Documentation</a>
+        <a href="contact.html" class="nav-link hover:text-electric-400 transition">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero text-white flex items-center justify-center pt-16 relative">
+    <canvas class="particles"></canvas>
+    <div class="container mx-auto px-4 text-center z-10">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4 fade-in rotate-3d">My Experience</h1>
+      <p class="text-lg max-w-2xl mx-auto mb-8 fade-in" style="animation-delay: 0.3s;">
+        Over 4+ years as a QA Engineer, I’ve honed my skills in automated testing with Cypress, API validation, and Agile collaboration, delivering impactful results in software quality.
+      </p>
+    </div>
+    <!-- Holographic Globe -->
+    <div class="globe-container">
+      <svg class="globe w-full h-full" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#00B4D8" stroke-width="2" opacity="0.5"/>
+        <path d="M50 10a40 40 0 0 1 0 80" fill="none" stroke="#FFD700" stroke-width="1"/>
+        <path d="M10 50h80" fill="none" stroke="#FFD700" stroke-width="1"/>
+        <circle cx="70" cy="30" r="3" fill="#FFD700"/>
+        <circle cx="40" cy="60" r="3" fill="#FFD700"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section class="py-20 experience-section relative">
+    <canvas class="shapes-canvas"></canvas>
+    <div class="container mx-auto px-4 relative z-10">
+      <!-- Career Hologram -->
+      <canvas id="hologram-canvas"></canvas>
+      <h2 class="text-3xl font-bold text-center text-midnight-900 mb-12 fade-in">Professional Journey</h2>
+      <div class="max-w-3xl mx-auto">
+        <div class="timeline-item slide-on">
+          <div class="timeline-content">
+            <div class="flex items-start relative">
+              <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19.5 8H17V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4.5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm9 12H6v-6h12v6z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-midnight-900">Quality Assurance Engineer</h3>
+                <p class="text-gray-600">Sportendo, Los Angeles, CA | 11/2022 - Present</p>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                  <li>Conducted thorough testing of web and mobile apps using TestFlight, ensuring seamless user experiences across devices.</li>
+                  <li>Developed and executed automated test cases with Cypress, boosting testing efficiency by 30% and enhancing software quality.</li>
+                  <li>Increased API automation coverage by creating new test scripts and expanding frameworks, streamlining testing processes.</li>
+                  <li>Collaborated with developers, product owners, and support teams in one-week Agile sprint cycles, contributing to timely project completions.</li>
+                  <li>Tracked defects using Jira, facilitating timely resolutions and improving product reliability.</li>
+                </ul>
+              </div>
+              <div class="ml-4 metric-sphere">
+                <div class="metric-text">30% Efficiency Boost</div>
+              </div>
+            </div>
+            <div class="spotlight"></div>
+          </div>
+          <div class="timeline-popup">
+            <p>Improved testing processes through daily stand-ups, sprint planning, and retrospectives, enhancing team collaboration.</p>
+          </div>
+        </div>
+        <div class="timeline-item slide-on" style="animation-delay: 0.2s;">
+          <div class="timeline-content">
+            <div class="flex items-start relative">
+              <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19.5 8H17V6c0-1.1-.9-2-2-2H9c-1.1 0-2 .9-2 2v2H4.5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zM9 6h6v2H9V6zm9 12H6v-6h12v6z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-midnight-900">Quality Assurance Engineer</h3>
+                <p class="text-gray-600">Delekhomes, United States | 03/2021 - 09/2022</p>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                  <li>Executed manual functional, regression, usability, and end-to-end tests, ensuring platform reliability and performance.</li>
+                  <li>Led API validation and exploratory testing with Postman and Swagger, reducing backend issues by 25%.</li>
+                  <li>Conducted cross-browser testing to ensure UI/UX consistency, improving user satisfaction across devices.</li>
+                  <li>Managed test cases and defects using Jira and Zephyr Scale, enhancing issue resolution efficiency.</li>
+                  <li>Performed user acceptance testing (UAT), aligning products with business goals and driving customer satisfaction.</li>
+                </ul>
+              </div>
+              <div class="ml-4 metric-sphere">
+                <div class="metric-text">25% Issue Reduction</div>
+              </div>
+            </div>
+            <div class="spotlight"></div>
+          </div>
+          <div class="timeline-popup">
+            <p>Verified SQL databases via Adminer, ensuring data integrity and supporting system reliability.</p>
+          </div>
+        </div>
+        <div class="timeline-item slide-on" style="animation-delay: 0.4s;">
+          <div class="timeline-content">
+            <div class="flex items-start relative">
+              <svg class="w-8 h-8 mr-4 text-electric-400 icon-hover" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+              </svg>
+              <div class="flex-1">
+                <h3 class="text-xl font-semibold text-midnight-900">Sales Manager</h3>
+                <p class="text-gray-600">AutoParts, Ukraine | 10/2018 - 02/2021</p>
+                <ul class="list-disc list-inside text-gray-600 mt-2">
+                  <li>Achieved record-breaking sales, consistently exceeding monthly and annual targets, driving significant revenue growth.</li>
+                  <li>Built and maintained strong client relationships through exceptional communication and negotiation skills, enhancing customer loyalty.</li>
+                  <li>Mentored new team members, sharing strategies that improved overall team performance and sales outcomes.</li>
+                  <li>Developed sales strategies that increased customer retention and expanded the client base.</li>
+                  <li>Analyzed market trends to adapt sales approaches, contributing to sustained business growth.</li>
+                </ul>
+              </div>
+              <div class="ml-4 metric-sphere">
+                <div class="metric-text">Top Sales Achiever</div>
+              </div>
+            </div>
+            <div class="spotlight"></div>
+          </div>
+          <div class="timeline-popup">
+            <p>Drove significant revenue growth through strategic sales and client management.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating LinkedIn Badge -->
+  <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="linkedin-badge fixed bottom-4 left-4 bg-electric-400 text-midnight-900 p-4 rounded-full shadow-lg holo-btn z-50">
+    <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+    </svg>
+  </a>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container mx-auto px-4 text-center">
+      <p class="mb-4">© 2025 Daniel Lantukh. All rights reserved.</p>
+      <div class="flex justify-center space-x-6">
+        <a href="https://www.linkedin.com/in/daniel-lantukh-a45622343/" target="_blank" class="text-electric-400 hover:text-gold-400 transition">LinkedIn</a>
+        <a href="mailto:daniel.14146566@icloud.com" class="text-electric-400 hover:text-gold-400 transition">daniel.14146566@icloud.com</a>
+        <a href="tel:+14705199240" class="text-electric-400 hover:text-gold-400 transition">470-519-9240</a>
+      </div>
+      <p class="mt-4 text-sm opacity-75">Please reach out via email or phone if LinkedIn is unavailable.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Particle Network Background
+    const canvas = document.querySelector('.particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = [];
+    const maxDistance = 100;
+    for (let i = 0; i < 50; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5
+      });
+    }
+    let mouse = { x: null, y: null };
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#00B4D8';
+        ctx.fill();
+        if (mouse.x && mouse.y) {
+          const dist = Math.sqrt((p.x - mouse.x) ** 2 + (p.y - mouse.y) ** 2);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(0, 180, 216, ${1 - dist / maxDistance})`;
+            ctx.stroke();
+          }
+        }
+        particles.forEach(p2 => {
+          const dist = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+          if (dist < maxDistance) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(0, 180, 216, ${1 - dist / maxDistance})`;
+            ctx.stroke();
+          }
+        });
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Shapes Background Animation
+    const shapesCanvas = document.querySelector('.shapes-canvas');
+    const shapesCtx = shapesCanvas.getContext('2d');
+    shapesCanvas.width = window.innerWidth;
+    shapesCanvas.height = document.querySelector('.experience-section').offsetHeight;
+    const shapes = [];
+    for (let i = 0; i < 20; i++) {
+      shapes.push({
+        x: Math.random() * shapesCanvas.width,
+        y: Math.random() * shapesCanvas.height,
+        size: Math.random() * 30 + 10,
+        speedX: (Math.random() - 0.5) * 0.3,
+        speedY: (Math.random() - 0.5) * 0.3,
+        type: Math.random() > 0.5 ? 'triangle' : 'hexagon',
+        opacity: Math.random() * 0.5 + 0.2
+      });
+    }
+    function animateShapes() {
+      shapesCtx.clearRect(0, 0, shapesCanvas.width, shapesCanvas.height);
+      shapes.forEach(s => {
+        s.x += s.speedX;
+        s.y += s.speedY;
+        if (s.x < 0 || s.x > shapesCanvas.width) s.speedX *= -1;
+        if (s.y < 0 || s.y > shapesCanvas.height) s.speedY *= -1;
+        shapesCtx.beginPath();
+        if (s.type === 'triangle') {
+          shapesCtx.moveTo(s.x, s.y - s.size);
+          shapesCtx.lineTo(s.x - s.size, s.y + s.size);
+          shapesCtx.lineTo(s.x + s.size, s.y + s.size);
+          shapesCtx.closePath();
+        } else {
+          shapesCtx.moveTo(s.x + s.size * Math.cos(0), s.y + s.size * Math.sin(0));
+          for (let i = 1; i < 6; i++) {
+            shapesCtx.lineTo(s.x + s.size * Math.cos(i * 2 * Math.PI / 6), s.y + s.size * Math.sin(i * 2 * Math.PI / 6));
+          }
+          shapesCtx.closePath();
+        }
+        shapesCtx.fillStyle = `rgba(0, 180, 216, ${s.opacity})`;
+        shapesCtx.fill();
+      });
+      requestAnimationFrame(animateShapes);
+    }
+    animateShapes();
+
+    // Career Hologram Visualization
+    const hologramCanvas = document.getElementById('hologram-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, hologramCanvas.clientWidth / 300, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: hologramCanvas, alpha: true });
+    renderer.setSize(hologramCanvas.clientWidth, 300);
+    camera.position.z = 50;
+
+    // Timeline Line
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x00B4D8 });
+    const linePoints = [];
+    for (let x = -50; x <= 50; x += 1) {
+      linePoints.push(new THREE.Vector3(x, 0, 0));
+    }
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(linePoints);
+    const timelineLine = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(timelineLine);
+
+    // Job Nodes and Skill Satellites
+    const jobs = [
+      { x: -30, title: "Sportendo", achievements: "30% Efficiency Boost", skills: ["Cypress", "API Testing", "Agile"], model: "gear" },
+      { x: 0, title: "Delekhomes", achievements: "25% Issue Reduction", skills: ["Postman", "Cross-Browser", "UAT"], model: "gear" },
+      { x: 30, title: "AutoParts", achievements: "Top Sales Achiever", skills: ["Sales", "Mentoring", "Client Relations"], model: "chart" }
+    ];
+
+    const nodes = [];
+    jobs.forEach(job => {
+      const nodeGeometry = new THREE.SphereGeometry(2, 32, 32);
+      const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700 });
+      const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+      node.position.set(job.x, 0, 0);
+      node.userData = job;
+      node.className = "hologram-node";
+      scene.add(node);
+      nodes.push(node);
+
+      // Skill Satellites
+      job.skills.forEach((skill, i) => {
+        const satelliteGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const satelliteMaterial = new THREE.MeshBasicMaterial({ color: 0x00B4D8 });
+        const satellite = new THREE.Mesh(satelliteGeometry, satelliteMaterial);
+        satellite.userData = { angle: (i / job.skills.length) * 2 * Math.PI, radius: 5, skill };
+        scene.add(satellite);
+        satellite.parentNode = node;
+      });
+    });
+
+    // Animation Loop
+    function animateHologram() {
+      requestAnimationFrame(animateHologram);
+      nodes.forEach(node => {
+        node.rotation.y += 0.02;
+        scene.children.forEach(child => {
+          if (child.parentNode === node) {
+            child.userData.angle += 0.05;
+            child.position.set(
+              node.position.x + Math.cos(child.userData.angle) * child.userData.radius,
+              Math.sin(child.userData.angle) * child.userData.radius,
+              0
+            );
+          }
+        });
+      });
+      renderer.render(scene, camera);
+    }
+    animateHologram();
+
+    // Interaction with Nodes
+    const raycaster = new THREE.Raycaster();
+    const mouseVector = new THREE.Vector2();
+    hologramCanvas.addEventListener('click', (e) => {
+      const rect = hologramCanvas.getBoundingClientRect();
+      mouseVector.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseVector.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(mouseVector, camera);
+      const intersects = raycaster.intersectObjects(nodes);
+      if (intersects.length > 0) {
+        const job = intersects[0].object.userData;
+        alert(`Job: ${job.title}\nAchievements: ${job.achievements}\nSkills: ${job.skills.join(", ")}`);
+        // Simulate holographic projection (placeholder for more complex animation)
+        const projection = new THREE.Mesh(
+          new THREE.BoxGeometry(5, 5, 5),
+          new THREE.MeshBasicMaterial({ color: 0x00B4D8, wireframe: true })
+        );
+        projection.position.set(job.x, 10, 0);
+        scene.add(projection);
+        gsap.to(projection.scale, { x: 2, y: 2, z: 2, duration: 1, yoyo: true, repeat: 1 });
+      }
+    });
+
+    // Scroll Background Transition
+    window.addEventListener('scroll', () => {
+      const section = document.querySelector('.experience-section');
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.5) {
+        section.classList.add('shapes');
+      } else {
+        section.classList.remove('shapes');
+      }
+    });
+
+    // Spotlight Effect
+    document.querySelectorAll('.timeline-item').forEach(item => {
+      item.addEventListener('mousemove', (e) => {
+        const spotlight = item.querySelector('.spotlight');
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        spotlight.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0, 180, 216, 0.3) 0%, transparent 70%)`;
+      });
+    });
+
+    // Sound Effect (Ping on Hover)
+    let soundEnabled = false;
+    const pingSound = new Audio('https://www.soundjay.com/buttons/ping-01.mp3');
+    pingSound.volume = 0.3;
+    document.querySelectorAll('.timeline-item').forEach(item => {
+      item.addEventListener('mouseenter', () => {
+        if (soundEnabled) pingSound.play();
+      });
+    });
+
+    // Scroll Progress Bar
+    window.addEventListener('scroll', () => {
+      const scrollTop = document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.querySelector('.progress-bar').style.width = progress + '%';
+    });
+
+    // Mouse Trail Effect
+    document.addEventListener('mousemove', (e) => {
+      const trail = document.createElement('div');
+      trail.className = 'mouse-trail';
+      trail.style.left = e.clientX + 'px';
+      trail.style.top = e.clientY + 'px';
+      document.body.appendChild(trail);
+      setTimeout(() => {
+        trail.style.opacity = '0';
+        setTimeout(() => trail.remove(), 500);
+      }, 300);
+    });
+
+    // 3D Tilt Effect for Cards
+    document.querySelectorAll('.timeline-item').forEach(item => {
+      item.addEventListener('mousemove', (e) => {
+        const rect = item.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const tiltX = (y / rect.height) * 20;
+        const tiltY = -(x / rect.width) * 20;
+        item.querySelector('.timeline-content').style.transform = `rotateY(${tiltY}deg) rotateX(${tiltX}deg)`;
+      });
+      item.addEventListener('mouseleave', () => {
+        item.querySelector('.timeline-content').style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
+    });
+
+    // GSAP Animations
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.from('.fade-in', { opacity: 0, duration: 1, stagger: 0.2 });
+      gsap.from('.slide-in', { y: 50, opacity: 0, duration: 0.8, stagger: 0.2 });
+
+      // Debug LinkedIn badge click
+      document.querySelector('.linkedin-badge').addEventListener('click', () => {
+        console.log('LinkedIn badge clicked');
+      });
+    });
+  </script>
+</body>
+</html>
